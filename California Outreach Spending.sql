@@ -9,7 +9,7 @@ The original SQL script for this project were not retained. I recreated the anal
 -- Standarized the 2021 raw contract data: clean text, convert dates and dollar amounts, and assign report year
 SELECT 
     2021 AS report_year, 
-to_date(NULLIF(btrim(report_period), ''), 'MM/DD/YYYY') AS report_period, 
+	to_date(NULLIF(btrim(report_period), ''), 'MM/DD/YYYY') AS report_period, 
     btrim(business_unit) AS business_unit, 
     btrim(department_name) AS department_name, 
     btrim(procurement_transaction_id) AS procurement_txn_id, 
@@ -27,7 +27,7 @@ FROM raw_2021; 
 -- Standarized 2022 raw contract data to match the same column output
 SELECT 
     2022 AS report_year, 
-safe_to_date(NULLIF(btrim("Report Period"), ''), 'MM/DD/YYYY') AS report_period, 
+	safe_to_date(NULLIF(btrim("Report Period"), ''), 'MM/DD/YYYY') AS report_period, 
     btrim("Business Unit") AS business_unit, 
     btrim("Department Name") AS department_name, 
     btrim("Procurement Transaction ID") AS procurement_txn_id, 
@@ -44,7 +44,7 @@ FROM raw_2022; 
 -- Standarized 2023 raw contract data to match the same column output
 SELECT 
     2023 AS report_year, 
-safe_to_date(NULLIF(btrim("Report Period"), ''), 'DD-Mon-YY') AS report_period, 
+	safe_to_date(NULLIF(btrim("Report Period"), ''), 'DD-Mon-YY') AS report_period, 
     btrim("Business Unit") AS business_unit, 
     btrim("Department Name") AS department_name, 
     btrim("Procurement Transaction ID") AS procurement_txn_id, 
