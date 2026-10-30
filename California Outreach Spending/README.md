@@ -29,5 +29,5 @@ In this project, I aimed to understand how California state agencies spent on de
   
 **Dashboard:** [California DGS Outreach Spend Dashboard](https://public.tableau.com/app/profile/ren.alcalde/viz/CaliforniaDGSOutreachSpendDashboard/overview2)
 
-### Results
+## Results
 Outreach spending was driven by Covid-19 campaigns and concentrated in a few players. It rose from $23.2M in 2021 to $200.5M in 2022, then fell to $51.0M in 2023 as Covid-19 campaigns ended. The General public and the Internet were the fastest-growing community and media type, while two suppliers (Runyon Saltzman Inc. and the CA Travel & Tourism Commission) received about 71% of all spending, and the top 5 departments accounted for about 92%.
