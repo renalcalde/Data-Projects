@@ -22,7 +22,7 @@ I compared retail and warehouse revenue from a liquor distributor dataset to see
 
 <img src="Dashboard.png" alt="Dashboard image" width=800>
 
-Dashboard:[Sales Channel Performance](https://public.tableau.com/app/profile/ren.alcalde/viz/SalesChannelPerformance_17895329605830/Dashboard)
+**Dashboard**:[Sales Channel Performance](https://public.tableau.com/app/profile/ren.alcalde/viz/SalesChannelPerformance_17895329605830/Dashboard)
 
 ## Results
 Warehouse revenue made up 78.27% of total revenue across all years, and retail warehouse only making up 21.73%. Warehouse revenue was led by beer and by Crown Imports as top supplier. 
