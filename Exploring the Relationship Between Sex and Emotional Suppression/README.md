@@ -5,6 +5,7 @@ As part of my Cognitive Science coursework, I used emotional suppression scores 
 
 ## Data
 - **Source:** [Midlife in the United States (MIDUS 3): Neuroscience Project, 2017-2022 (ICPSR 38862)](https://www.icpsr.umich.edu/web/NACDA/studies/38862/export#)
+- **Code:** [exploring_the_relationship_between_sex_and_emotional_suppression.R](sex_and_emotional_suppression.R)
 - **Sample:** n = 73 males, n = 97 females
 - **Measure:** Emotional suppression score, calculated as the average of participants' ratings on several survey items about suppressing emotions (range 1 to 6.5; higher = more suppression)
 
