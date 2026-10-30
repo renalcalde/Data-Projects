@@ -20,7 +20,9 @@ I compared retail and warehouse revenue from a liquor distributor dataset to see
 - 2019 had the highest total revenue ($4.50M).
 - Across all years, beer was the top item type and Crown Imports the top supplier by total revenue, which is driven mostly by warehouse sales.
 
-<img src="" alt="" width=800>
+<img src="Dashboard.png" alt="Dashboard image" width=800>
+
+Dashboard:[Sales Channel Performance](https://public.tableau.com/app/profile/ren.alcalde/viz/SalesChannelPerformance_17895329605830/Dashboard)
 
 ## Results
 Warehouse revenue made up 78.27% of total revenue across all years, and retail warehouse only making up 21.73%. Warehouse revenue was led by beer and by Crown Imports as top supplier. 
