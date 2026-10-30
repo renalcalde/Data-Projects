@@ -1,4 +1,4 @@
-# California Outreach Spending
+# 🏛️ California Outreach Spending
 
 ## Objective
 In this project, I aimed to understand how California state agencies spent on demographic-targeted outreach campaigns from 2021 to 2023:
@@ -22,8 +22,10 @@ In this project, I aimed to understand how California state agencies spent on de
 - Since 2021, the General public had the fastest growing community ($37.3M, 3238%) and the Internet was the fastest growing media type ($26.7M, 626%).
 - Covid-19 related campaigns made up most of 2021 (88%) and 2022 (94%), and almost none in 2023. So the drop from 2023 came from Covid-19 campaigns ending, not from agencies cutting outreach amount overall.
 
-![Overview page](dashboard-png/Overview.png)
-![Insight page](dashboard-png/Insight.png)
+
+<img src="dashboard_images/Overview.png" width="800">
+<img src="dashboard_images/Insight.png" width="800">
+  
 **Dashboard:** [California DGS Outreach Spend Dashboard](https://public.tableau.com/app/profile/ren.alcalde/viz/CaliforniaDGSOutreachSpendDashboard/overview2)
 
 ### Results
