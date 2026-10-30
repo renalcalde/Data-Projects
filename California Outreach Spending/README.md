@@ -8,6 +8,7 @@ In this project, I aimed to understand how California state agencies spent on de
 ## Data
 - **Source:** [DGS Marketing and Outreach Advertising purchase reports, 2021-2023.](https://catalog.data.gov/dataset/marketing-and-outreach-advertising-materials-purchase?from_hint=eyJxIjoiY2FsaWZvcm5pYSBvdXRyZWFjaCJ9)
   - **Contents:** California state outreach spending reports for 2021, 2022, and 2023, published as separate yearly CSV files. Fields include report year, campaign name, community, department, media type, and spend amount.
+- **Code:** [california_outreach_spending.sql](california_outreach_spending.sql)
   
 - **Tools:** PostgreSQL, Tableau
 - **Skills:** Data cleaning, data analysis, data visualization
