@@ -46,8 +46,9 @@ SELECT customer_id, COUNT(DISTINCT order_date) FROM sales
 GROUP BY customer_id
 ORDER BY customer_id ASC;
 ```
+
 **Approach:**
-- **COUNT** and **DISTINCT** to find all unqiue `customer_id` in `sales` table
+- **COUNT**(**DISTINCT** `order_date`) counts each day a customer visited once
 - **GROUP BY** by `customer_id` so each customer gets one total and **ORDER BY** to keep output organized
   
 **Solution:**
@@ -78,11 +79,11 @@ WITH first_purchase AS (
 SELECT customer_id, order_date, product_name FROM first_purchase 
 WHERE purchase_rank = 1;
 ```
-assigns a rank to each row within a partitioned result set based on a specified ordering
 
 **Approach:**
-- Create a CTEs called `first purchase` and inside, RANK each row within a PARTITION BY `s.customer_id` thats divides the result set into groups and is then ORDER BY `s.order_date` which organizes the dataset from earliest purchase to latest purchase
--  `SELECT` from `first_purchase` and set a `WHERE` condition to return the first item purchased by each customer
+- Create a **CTE** called `first_purchase` and inside, use a **RANK** to rank each customer's order by order date, using **PARTITION BY** `s.customer_id` so each customer is ranked searately
+- **JOIN** to `menu` on `product_id` to get the product name
+- **SELECT** from `first_purchase` and set a **WHERE** condition to return each customer's first purchase
   
 **Solution:**
 | customer_id | order_date | product_name |
@@ -103,8 +104,9 @@ LIMIT 1;
 ```
 
 **Approach:**
-- 
-- 
+- **JOIN** `sales.product_id` and `menu.product_id`  to get the product name of every customer order
+- **COUNT** `sales.product_id` and **GROUP BY** to get the number of times each item was purchased
+- **ORDER BY** the count **DESC** and **LIMIT** to return only the top purchased item
   
 **Solution:**
 | product_name | count   |
@@ -133,7 +135,9 @@ WHERE purchase_rank = 1;
 ```
 
 **Approach:**
-- 
+- Create a **CTE** called `first_purchase`, that **JOINs** `sales` to `menu`, then **COUNTs** each item per customer with **GROUP BY**
+- Use **DENSE_RANK** with **PARTITION BY** `s.customer_id`, **ORDER BY** the count **DESC** so each customer's top item ranks 1 and ties are kept
+- **SELECT** `customer_id`, `order_count`, `product_name` from the CTE `first_purchase` **WHERE** rank = 1
 
 **Solution:**
 | customer_id | order_count | product_name |
@@ -170,7 +174,9 @@ WHERE purchase_rank = 1;
 ```
 
 **Approach:**
-- 
+- Create a **CTE** that **JOINs** `members` to `sales` and `sales` to `menu`, **WHERE** it only keeps the orders after a customer becomes a member
+- Use **DENSE_RANK** with **PARTITION BY** `mb.customer_id` and **ORDER BY** `s.order_date` so each customer's order is ranked by their order date from earliest to latest
+- **SELECT** from the **CTE WHERE** rank = 1
 
 **Solution:**
 | customer_id | join_date | order_date | product_name |
@@ -204,7 +210,8 @@ WHERE purchase_rank = 1;
 ```
 
 **Approach:**
-- 
+- Same **CTE** structure as Question 6, but filter for orders before the `mb.join_date`
+- Rank with **DENSE RANK** ordered by `s.order_date` **DESC**, so each customer's most recent order ranks 1
 
 **Solution:**
 | customer_id | join_date | order_date | product_name |
@@ -226,7 +233,9 @@ ORDER BY s.customer_id;
 ```
 
 **Approach:**
-- 
+- **JOIN** all three tables: `members`, `sales`, `menu` so each order has a price and a join date
+- **WHERE** `mb.join_date > s.order_date` to keep only the orders before a customer becomes a member
+- **COUNT** `s.product_id` for total items and **SUM** `m.price` for total spent, **GROUP BY** `customer_id`
 
 **Solution:**
 | customer_id | order_count | total_spend |
@@ -251,8 +260,9 @@ ORDER BY customer_id;
 ```
 
 **Approach:**
-- 
-- 
+- **JOIN** sales with menu on `product_id` to get each item's price
+- **SUM** a **CASE** statement called `total_points_earned`, **WHEN** a `product_name = sushi` then the customer earns double the points, if not, every dollar spend is 10 points
+- GROUP BY `customer_id`
   
 **Solution:**
 | customer_id | total_points_earned   |
@@ -267,7 +277,7 @@ SELECT
     mb.customer_id,
     SUM(
         CASE
-            WHEN s.order_date BETWEEN mb.join_date AND mb.join_date + INTERVAL '6 days' THEN m.price * 20 -- STICTLY LOOKS AT A TIME WINDOW
+            WHEN s.order_date BETWEEN mb.join_date AND mb.join_date + INTERVAL '6 days' THEN m.price * 20
             WHEN m.product_name = 'sushi' THEN m.price * 20
             ELSE m.price * 10
         END
@@ -281,8 +291,9 @@ ORDER BY customer_id;
 ```
 
 **Approach:**
-- 
-- 
+- JOIN all three tables: `members`, `sales`, `menu`
+- SUM a CASE statement called `total_points_earned`, WHEN a customer orders the first week after they became a member `(order_date from join_date through join_date + 6)`, they earn double the points, or if they purchase `sushi` then the customer earns double the points, if not, every dollar spend is 10 point
+- WHERE EXTRACT(MONTH FROM s.order_date) = 1 only looks at orders in the 1st month of the year, January
   
 **Solution:**
 | customer_id | total_points_earned   |
