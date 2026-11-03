@@ -6,7 +6,7 @@
 </p>
 
 ## Objective
-Danny runs a small Japanese restaurant and wants to use customer data to understand visiting patterns, spending, and favorite menu items. The goal is to answer his questions with SQL to help Danny deliver a more personalized experience for loyal customers and decide whether to expand the existing loyalty program.
+Danny runs a small Japanese restaurant and wants to use customer data to understand visiting patterns, spending, and favorite menu items. The goal is to answer his questions with SQL to help Danny understand customer insight and decide whether to expand the existing loyalty program.
 
 ## Entity Relationship Diagram
 Danny has shared 3 key datasets for this dataset:
@@ -22,16 +22,16 @@ Danny has shared 3 key datasets for this dataset:
 **1. What is the total amount each customer spent at the restaurant?**
 ```SQL
 SELECT sales.customer_id, SUM(menu.price) as total_spending FROM sales
-LEFT JOIN menu
+INNER JOIN menu
     ON sales.product_id = menu.product_id
 GROUP BY sales.customer_id
 ORDER BY sales.customer_id ASC;
 ```
 
 **Approach:**
-- **JOIN** `sales.product_id` and `menu.product_id` to get the price of each ordered item
-- **SUM** `menu.price` to find the total spending for each customer
-- **GROUP BY** `sales.customer_id` so each customer gets one total and **ORDER BY** to keep output organized
+- **JOIN** `sales` and `menu` on `product_id` to get the price of each ordered item
+- **SUM** `price` to find the total spending for each customer
+- **GROUP BY** `customer_id` so each customer gets one total and **ORDER BY** to keep output organized
   
 **Solution:**
 | customer_id | total_spending |
@@ -81,8 +81,8 @@ WHERE purchase_rank = 1;
 ```
 
 **Approach:**
-- Create a **CTE** called `first_purchase` and inside, use a **RANK** to rank each customer's order by order date, using **PARTITION BY** `s.customer_id` so each customer is ranked searately
-- **JOIN** to `menu` on `product_id` to get the product name
+- Create a **CTE** called `first_purchase` and inside, use a **RANK** to rank each customer's order by order date, using **PARTITION BY** `customer_id` so each customer is ranked searately
+- **JOIN** `sales` to `menu` on `product_id` to get the product name
 - **SELECT** from `first_purchase` and set a **WHERE** condition to return each customer's first purchase
   
 **Solution:**
@@ -104,8 +104,8 @@ LIMIT 1;
 ```
 
 **Approach:**
-- **JOIN** `sales.product_id` and `menu.product_id`  to get the product name of every customer order
-- **COUNT** `sales.product_id` and **GROUP BY** to get the number of times each item was purchased
+- **JOIN** `sales` and `menu` to get the product name of every customer order
+- **COUNT** `product_id` and **GROUP BY** to get the number of times each item was purchased
 - **ORDER BY** the count **DESC** and **LIMIT** to return only the top purchased item
   
 **Solution:**
@@ -136,7 +136,7 @@ WHERE purchase_rank = 1;
 
 **Approach:**
 - Create a **CTE** called `first_purchase`, that **JOINs** `sales` to `menu`, then **COUNTs** each item per customer with **GROUP BY**
-- Use **DENSE_RANK** with **PARTITION BY** `s.customer_id`, **ORDER BY** the count **DESC** so each customer's top item ranks 1 and ties are kept
+- Use **DENSE_RANK** with **PARTITION BY** `customer_id`, **ORDER BY** the count **DESC** so each customer's top item ranks 1 and ties are kept
 - **SELECT** `customer_id`, `order_count`, `product_name` from the CTE `first_purchase` **WHERE** rank = 1
 
 **Solution:**
@@ -175,7 +175,7 @@ WHERE purchase_rank = 1;
 
 **Approach:**
 - Create a **CTE** that **JOINs** `members` to `sales` and `sales` to `menu`, **WHERE** it only keeps the orders after a customer becomes a member
-- Use **DENSE_RANK** with **PARTITION BY** `mb.customer_id` and **ORDER BY** `s.order_date` so each customer's order is ranked by their order date from earliest to latest
+- Use **DENSE_RANK** with **PARTITION BY** `customer_id` and **ORDER BY** `order_date` so each customer's order is ranked by their order date from earliest to latest
 - **SELECT** from the **CTE WHERE** rank = 1
 
 **Solution:**
@@ -210,8 +210,8 @@ WHERE purchase_rank = 1;
 ```
 
 **Approach:**
-- Same **CTE** structure as Question 6, but filter for orders before the `mb.join_date`
-- Rank with **DENSE RANK** ordered by `s.order_date` **DESC**, so each customer's most recent order ranks 1
+- Same **CTE** structure as Question 6, but filter for orders before the `join_date`
+- Rank with **DENSE RANK** ordered by `order_date` **DESC**, so each customer's most recent order ranks 1
 
 **Solution:**
 | customer_id | join_date | order_date | product_name |
@@ -234,8 +234,8 @@ ORDER BY s.customer_id;
 
 **Approach:**
 - **JOIN** all three tables: `members`, `sales`, `menu` so each order has a price and a join date
-- **WHERE** `mb.join_date > s.order_date` to keep only the orders before a customer becomes a member
-- **COUNT** `s.product_id` for total items and **SUM** `m.price` for total spent, **GROUP BY** `customer_id`
+- **WHERE** `join_date > order_date` to keep only the orders before a customer becomes a member
+- **COUNT** `product_id` for total items and **SUM** `price` for total spent, **GROUP BY** `customer_id`
 
 **Solution:**
 | customer_id | order_count | total_spend |
@@ -260,9 +260,9 @@ ORDER BY customer_id;
 ```
 
 **Approach:**
-- **JOIN** sales with menu on `product_id` to get each item's price
+- **JOIN** `sales` with `menu` on `product_id` to get each item's price
 - **SUM** a **CASE** statement called `total_points_earned`, **WHEN** a `product_name = sushi` then the customer earns double the points, if not, every dollar spend is 10 points
-- GROUP BY `customer_id`
+- **GROUP BY** `customer_id`
   
 **Solution:**
 | customer_id | total_points_earned   |
@@ -291,9 +291,9 @@ ORDER BY customer_id;
 ```
 
 **Approach:**
-- JOIN all three tables: `members`, `sales`, `menu`
-- SUM a CASE statement called `total_points_earned`, WHEN a customer orders the first week after they became a member `(order_date from join_date through join_date + 6)`, they earn double the points, or if they purchase `sushi` then the customer earns double the points, if not, every dollar spend is 10 point
-- WHERE EXTRACT(MONTH FROM s.order_date) = 1 only looks at orders in the 1st month of the year, January
+- **JOIN** all three tables: `members`, `sales`, `menu`
+- **SUM** a **CASE** statement called `total_points_earned`, **WHEN** a customer orders the first week after they became a member `(order_date from join_date through join_date + 6)`, they earn double the points, or if they purchase `sushi` then the customer earns double the points, if not, every dollar spend is 10 point
+- **WHERE EXTRACT**(**MONTH FROM** `order_date`) = 1 only looks at orders in the 1st month of the year, January
   
 **Solution:**
 | customer_id | total_points_earned   |
@@ -319,6 +319,11 @@ FULL JOIN menu m ON s.product_id = m.product_id
 ORDER BY s.customer_id, s.order_date;
 ```
 
+**Approach:**
+- **FULL JOIN** all tables: `members`, `sales` and `menu` so non-members aren't dropped from data
+- Use a **CASE** statement to create a `member` column that displays membership status for every purchase, 'Y' if `order_date` was on or after `join_date` and 'N' if not a member
+
+**Solution:**
 | customer_id | order_date | product_name | price | member |
 | ----------- | ---------- | ------------ | ----- | ------ |
 | A | 2021-01-01 | curry | 15 | N |
@@ -375,6 +380,13 @@ ranking_status AS (
 SELECT customer_id, order_date, product_name, price, member, ranking FROM ranking_status;
 ```
 
+**Approach:**
+- Create a **CTE** called `membership_status` that uses the same structure as Bonus Question 1 query
+- Create a second **CTE** called `ranking_status` that uses a **CASE** statement, **WHEN** member = 'N', returns **NULL**, otherwise use **RANK** with **PARTITION BY** `customer_id` and `member`, and **ORDER BY** `order_date` to rank each member's purchases
+- **SELECT** `customer_id`, `order_date`, `product_name`, `price`, `member`, and `ranking` from `ranking_status`, ordered by `customer_id` and `order_date`
+
+
+**Solution:**
 | customer_id | order_date | product_name | price | member | ranking |
 | ----------- | ---------- | ------------ | ----- | ------ | ------- |
 | A | 2021-01-01 | curry | 15 | N | NULL |
@@ -394,5 +406,17 @@ SELECT customer_id, order_date, product_name, price, member, ranking FROM rankin
 | C | 2021-01-07 | ramen | 12 | N | NULL |
 
 ## Challenges
+- For Q2, I previously made the error of counting all visits which resulted an misinformed data. I went back and included DISTINCT() to count for every unique visit.
+- For Q10, I made the error of not properly structuring my **CASE** statement logic which resulted in a misinformed insight, I went back and properly reorganized my logic statement and included members in the **PARTITION BY** line so that it ranks for every member. 
 
 ## Key Takeaways
+**Business insights**
+- Customer A spent the most overall ($76), followed by Customer B ($74), while Customer C spent the least ($36)
+- Ramen is the most popular item with 8 purchases
+- Customer B visited the most often (6 days), which suggests they're the most loyal even though A spent more
+- Both members ordered heavily in the days right after joining, so the loyalty program appears to drive early engagement
+
+**Technical skills**
+- Used **CTEs** and **window functions** (`DENSE_RANK`, `RANK`) to rank orders within each customer
+- Applied **CASE** statements to build conditional logic for membership status and points
+- Combined **JOIN** and **LEFT JOIN** to keep non-member data in the results
