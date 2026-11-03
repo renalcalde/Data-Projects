@@ -1,10 +1,20 @@
 # Case Study #1: Danny's Diner
-<img src="dannys_diner.png" alt="Danny's Diner Poster" width="600">
+<p align="center">
+<img src="dannys_diner.png" alt="Danny's Diner Poster" width="500">
+</p>
 
 ## Objective
 Danny runs a small Japanese restaurant and wants to use customer data to understand visiting patterns, spending, and favorite menu items. The goal is to answer his questions with SQL to help Danny deliver a more personalized experience for loyal customers and decide whether to expand the existing loyalty program.
 
 ## Entity Relationship Diagram
+Danny has shared 3 key datasets for this dataset:
+- `sales` : shows all `customer_id` purchases with the corresponding `order_date` and `product_info` for when and what menu item was ordered.
+- `menu` : maps `product_id` to the actual `product_name` and `price` of each menu item.
+- `members` : shows the `join_date` when a `customer_id` joined the beta version of the Danny's Diner loyalty program. 
+   
+<p align="center">
+<img src="entity_relationship_diagram.png" alt="Entity Relationship Diagram" width="600">
+</p>
 
 ## Question and Solution
 **1. What is the total amount each customer spent at the restaurant?**
@@ -24,9 +34,9 @@ ORDER BY sales.customer_id ASC;
 **Solution:**
 | customer_id | total_spending |
 | --------------- | --------------- |
-| A   | 76   |
-| B   | 74   |
-| C   | 36   |
+| A | 76 |
+| B | 74 |
+| C | 36 |
 
 **2. How many days has each customer visited the restaurant?**
 ```SQL
@@ -296,7 +306,7 @@ ORDER BY s.customer_id, s.order_date;
 ```
 
 | customer_id | order_date | product_name | price | member |
-|:-----------:|:----------:|:------------:|:-----:|:------:|
+| ----------- | ---------- | ------------ | ----- | ------ |
 | A | 2021-01-01 | curry | 15 | N |
 | A | 2021-01-01 | sushi | 10 | N |
 | A | 2021-01-07 | curry | 15 | Y |
@@ -352,7 +362,7 @@ SELECT customer_id, order_date, product_name, price, member, ranking FROM rankin
 ```
 
 | customer_id | order_date | product_name | price | member | ranking |
-|:-----------:|:----------:|:------------:|:-----:|:------:|:-------:|
+| ----------- | ---------- | ------------ | ----- | ------ | ------- |
 | A | 2021-01-01 | curry | 15 | N | NULL |
 | A | 2021-01-01 | sushi | 10 | N | NULL |
 | A | 2021-01-07 | curry | 15 | Y | 1 |
@@ -368,3 +378,9 @@ SELECT customer_id, order_date, product_name, price, member, ranking FROM rankin
 | C | 2021-01-01 | ramen | 12 | N | NULL |
 | C | 2021-01-01 | ramen | 12 | N | NULL |
 | C | 2021-01-07 | ramen | 12 | N | NULL |
+
+## Challenges
+
+## Key Takeaways
+
+**SOURCE:** [8 Week SQL Challenge: Case Study #1 - Danny's Diner](https://8weeksqlchallenge.com/case-study-1/)
