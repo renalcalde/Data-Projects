@@ -5,6 +5,13 @@
   <strong>Source:</strong> <a href="https://8weeksqlchallenge.com/case-study-1/">8 Week SQL Challenge: Case Study #1 - Danny's Diner</a>
 </p>
 
+## Table of Contents
+- [Objective](#objective)
+- [Entity Relationship Diagram](#entity-relationship-diagram)
+- [Question & Solution](#question-and-solution)
+- [Challenge](#challenges)
+- [Key Takeaway](#key-takeaways)
+
 ## Objective
 Danny runs a small Japanese restaurant and wants to use customer data to understand visiting patterns, spending, and favorite menu items. The goal is to answer his questions with SQL to help Danny understand customer insight and decide whether to expand the existing loyalty program.
 
