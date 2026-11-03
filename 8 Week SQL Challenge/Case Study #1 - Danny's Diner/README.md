@@ -1,6 +1,8 @@
-# Case Study #1: Danny's Diner
+# 🍜 Case Study #1: Danny's Diner
+
 <p align="center">
-<img src="dannys_diner.png" alt="Danny's Diner Poster" width="500">
+  <img src="dannys_diner.png" alt="Danny's Diner Poster" width="500"><br>
+  <strong>Source:</strong> <a href="https://8weeksqlchallenge.com/case-study-1/">8 Week SQL Challenge: Case Study #1 - Danny's Diner</a>
 </p>
 
 ## Objective
@@ -27,9 +29,9 @@ ORDER BY sales.customer_id ASC;
 ```
 
 **Approach:**
-- Use **JOIN** to merge `sales.product_id` and `menu.product_id`
-- Use **SUM** to calculate the total spending for each customer
-- **GROUP BY** and **ORDER BY** `sales.customer_id`
+- **JOIN** `sales.product_id` and `menu.product_id` to get the price of each ordered item
+- **SUM** `menu.price` to find the total spending for each customer
+- **GROUP BY** `sales.customer_id` so each customer gets one total and **ORDER BY** to keep output organized
   
 **Solution:**
 | customer_id | total_spending |
@@ -45,8 +47,8 @@ GROUP BY customer_id
 ORDER BY customer_id ASC;
 ```
 **Approach:**
-- Use **COUNT** and **DISTINCT** to find all unqiue `customer_id` in `sales` table
-- **GROUP BY** and **ORDER BY** `customer_id`
+- **COUNT** and **DISTINCT** to find all unqiue `customer_id` in `sales` table
+- **GROUP BY** by `customer_id` so each customer gets one total and **ORDER BY** to keep output organized
   
 **Solution:**
 | customer_id | count |
@@ -76,10 +78,11 @@ WITH first_purchase AS (
 SELECT customer_id, order_date, product_name FROM first_purchase 
 WHERE purchase_rank = 1;
 ```
+assigns a rank to each row within a partitioned result set based on a specified ordering
 
 **Approach:**
-- 
-- 
+- Create a CTEs called `first purchase` and inside, RANK each row within a PARTITION BY `s.customer_id` thats divides the result set into groups and is then ORDER BY `s.order_date` which organizes the dataset from earliest purchase to latest purchase
+-  `SELECT` from `first_purchase` and set a `WHERE` condition to return the first item purchased by each customer
   
 **Solution:**
 | customer_id | order_date | product_name |
@@ -382,5 +385,3 @@ SELECT customer_id, order_date, product_name, price, member, ranking FROM rankin
 ## Challenges
 
 ## Key Takeaways
-
-**SOURCE:** [8 Week SQL Challenge: Case Study #1 - Danny's Diner](https://8weeksqlchallenge.com/case-study-1/)
