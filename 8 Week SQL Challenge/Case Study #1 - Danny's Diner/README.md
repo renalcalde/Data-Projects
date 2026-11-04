@@ -1,7 +1,7 @@
 # 🍜 Case Study #1: Danny's Diner
 
 <p align="center">
-  <img src="dannys_diner.png" alt="Danny's Diner Poster" width="500"><br>
+  <img src="png/dannys_diner.png" alt="Danny's Diner Poster" width="500"><br>
   <strong>Source:</strong> <a href="https://8weeksqlchallenge.com/case-study-1/">8 Week SQL Challenge: Case Study #1 - Danny's Diner</a>
 </p>
 
@@ -22,7 +22,7 @@ Danny has shared 3 key datasets for this case study:
 - `members` : shows the `join_date` when a `customer_id` joined the beta version of the Danny's Diner loyalty program. 
    
 <p align="center">
-<img src="entity_relationship_diagram.png" alt="Entity Relationship Diagram" width="600">
+<img src="png/entity_relationship_diagram.png" alt="Entity Relationship Diagram" width="600">
 </p>
 
 ## Question and Solution
