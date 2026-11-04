@@ -5,8 +5,6 @@ The [8 Week SQL Challenge](https://8weeksqlchallenge.com/) was created by [Data 
 Mainly being a self-taught analysts, I'm working through all 8 case studies to strengthen my skills and demonstrate my analytical abilities. This repo is a work in progress, and I'll add each case study as I complete it.
 
 ## Case Studies
-After completion, the following case studies will appear below.
-- Case Study #1: Danny's Diner
 
 | # | Case Study | Status |
 |---|------------|-------|
