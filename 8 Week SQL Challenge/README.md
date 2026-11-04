@@ -8,7 +8,7 @@ Mainly being a self-taught analysts, I'm working through all 8 case studies to s
 After completion, the following case studies will appear below.
 - Case Study #1: Danny's Diner
 
-| # | Case Study | Focus |
+| # | Case Study | Status |
 |---|------------|-------|
 | 1 | [Danny's Diner](./Case%20Study%201%20-%20Danny's%20Diner) | ✅ Complete |
 | 2 | Pizza Runner | Coming soon |
