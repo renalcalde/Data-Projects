@@ -10,6 +10,11 @@
 - [Entity Relationship Diagram](#entity-relationship-diagram)
 - [Data Cleaning](#data-cleaning)
 - [Question & Solution](#question-and-solution)
+  - [A. Pizza Metrics](#a-pizza-metrics)
+  - [B. Runner and Customer Experience](#b-runner-and-customer-experience)
+  - [C. Ingredient Optimisation](#c-ingredient-optimisation)
+  - [D. Pricing and Ratings](#d-pricing-and-ratings)
+  - [E. Bonus Questions](#e-bonus-questions)
 - [Challenge](#challenges)
 - [Key Takeaway](#key-takeaways)
   
@@ -691,7 +696,7 @@ SELECT
 
 <img width="199" height="117" alt="5" src="https://github.com/user-attachments/assets/f444fdc5-6c3d-467d-a2e3-8b5068bc0eb4" /><br>
 
-### E. Bonus Question
+### E. Bonus Questions
 **If Danny wants to expand his range of pizzas - how would this impact the existing data design? Write an INSERT statement to demonstrate what would happen if a new Supreme pizza with all the toppings was added to the Pizza Runner menu?**
 ```SQL
 INSERT INTO pizza_recipes (pizza_id, toppings) 
