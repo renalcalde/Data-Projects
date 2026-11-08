@@ -23,12 +23,12 @@ This case study analyzes Pizza Runner’s order, runner, and delivery data to un
 
 ## Entity Relationship Diagram
 There are 6 key datasets for this case study:
-- `runners` : shows the `registration_date` for each new runner
-- `customer_orders` : displays all customer pizza orders, with one row for each individual pizza that is part of the order
-- `runner_orders` : after each order is received through the system, they are assigned to a runner, however not all orders are fully complete and can be cancelled by the restaurant or the customer
-- `pizza_names` : Pizza Runner only has 2 pizzas available, the Meat Lovers or Vegeterian
-- `pizza_recipes` : Each `pizza_id` has a standard set of `toppings` which are used as part of the pizza recipe
-- `pizza_toppings` : Contains all of the `topping_name` values with their corresponding `topping_id` value
+- `runners` : Runner registration dates
+- `customer_orders` : One row per pizza ordered
+- `runner_orders` : One row per order, with pickup/delivery details and `cancellation` status
+- `pizza_names` : The two pizzas: Meat Lovers and Vegetarian
+- `pizza_recipes` : Standard toppings for each `pizza_id`
+- `pizza_toppings` : Topping names and their `topping_id`
 
 <p align="center">
 <img src="png/entity_relationship_diagram.png" alt="Entity Relationship Diagram" width="800">
@@ -36,6 +36,11 @@ There are 6 key datasets for this case study:
 
 ## Data Cleaning
 Before investigating the data, I had to clean the dataset by handling the `null` values and data types in the `customer_orders` and `runner_orders` tables.
+- `customer_orders`: blank and `'null'` values in `exclusions` and `extras` converted to `NULL`
+- `runner_orders`: same fix for `cancellation`, and pickup time, distance, and duration cleaned into usable types
+
+Full script: [data_cleaning.sql](./data_cleaning.sql)
+
 ```SQL
 -- CLEANS customer_orders TABLE
 -- replaces all empty rows and capitalize null into NULL
