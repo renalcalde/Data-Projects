@@ -36,82 +36,15 @@ There are 6 key datasets for this case study:
 
 ## Data Cleaning
 Before investigating the data, I had to clean the dataset by handling the `null` values and data types in the `customer_orders` and `runner_orders` tables.
-- `customer_orders`: blank and `'null'` values in `exclusions` and `extras` converted to `NULL`
-- `runner_orders`: same fix for `cancellation`, and pickup time, distance, and duration cleaned into usable types
+- `customer_orders`: converted blank and `'null'` values in `exclusions` and `extras` to NULL
+- `runner_orders`: similar fix for `cancellation`, and I turned `pickup_time`, `distance`, and `duration` into usable data types
 
 Full script: [data_cleaning.sql](./data_cleaning.sql)
-
-```SQL
--- CLEANS customer_orders TABLE
--- replaces all empty rows and capitalize null into NULL
-UPDATE customer_orders
-SET exclusions = NULL
-WHERE TRIM(exclusions) = '' OR TRIM(exclusions) = 'null';
-
-UPDATE customer_orders
-SET extras = NULL
-WHERE TRIM(extras) = '' OR TRIM(extras) = 'null';
-
--- CLEANS runner_orders TABLE
--- change columns to show metrics
-ALTER TABLE runner_orders
-RENAME COLUMN distance TO distance_km;
-
-ALTER TABLE runner_orders
-RENAME COLUMN duration TO duration_mins;
- 
--- adds NULL 
-UPDATE runner_orders
-SET pickup_time = NULL
-WHERE TRIM(pickup_time) = '' OR TRIM(pickup_time) = 'null';
-
-UPDATE runner_orders
-SET distance_km = NULL
-WHERE TRIM(distance_km) = '' OR TRIM(distance_km) = 'null';
-
-UPDATE runner_orders
-SET duration_mins = NULL
-WHERE TRIM(duration_mins) = '' OR TRIM(duration_mins) = 'null';
-
-UPDATE runner_orders
-SET cancellation = NULL
-WHERE TRIM(cancellation) = '' OR TRIM(cancellation) = 'null';
-
--- removes km inside columns
-UPDATE runner_orders
-SET distance_km = REPLACE(distance_km, 'km', '')
-WHERE distance_km LIKE '%km%';
-
--- removes minutes inside columns
-UPDATE runner_orders
-SET duration_mins = REPLACE(duration_mins, 'minute', '')
-WHERE duration_mins LIKE '%min%';
-
-UPDATE runner_orders
-SET duration_mins = REPLACE(duration_mins, 'minutes', '')
-WHERE duration_mins LIKE '%min%';
-
-UPDATE runner_orders
-SET duration_mins = REPLACE(duration_mins, 'mins', '')
-WHERE duration_mins LIKE '%min%';
-
--- changes all the type to the appropriate type
-ALTER TABLE runner_orders
-ALTER COLUMN duration_mins TYPE INT USING duration_mins::INT;
-
-ALTER TABLE runner_orders
-ALTER COLUMN distance_km TYPE FLOAT USING distance_km::FLOAT;
-
-ALTER TABLE runner_orders
-ALTER COLUMN pickup_time TYPE TIMESTAMP USING pickup_time::TIMESTAMP;
-```
-
 
 ## Question and Solution
 ### A. Pizza Metrics
 **1. How many pizzas were ordered?**
-- Use COUNT to count the number of orders from the `customer_orders` table
-  
+
 ```SQL
 SELECT COUNT(*) FROM customer_orders;
 ```
@@ -281,6 +214,7 @@ ORDER BY day_of_week;
 
 ### B. Runner and Customer Experience
 **1. How many runners signed up for each 1 week period? (i.e. week starts 2021-01-01)**
+- Use `'2021-01-01'` as a fixed anchor instead of DATE_TRUNC('week', ...), since the question defines weeks starting on that date, not on Monday
 
 ```SQL
 SELECT
@@ -296,6 +230,7 @@ ORDER BY 1;
 <img width="450" height="152" alt="1" src="https://github.com/user-attachments/assets/a231acbd-6345-4785-82b2-37061018e875" /><br>
 
 **2. What was the average time in minutes it took for each runner to arrive at the Pizza Runner HQ to pickup the order?**
+- JOIN `customer_orders` to get each order’s `order_time`, then converted the time gap referred as `prep_time` from an interval to minutes with EXTRACT(EPOCH ...) / 60 so it could be averaged
 
 ```SQL
 SELECT 
@@ -313,20 +248,10 @@ GROUP BY r.runner_id;
 
 
 **3. Is there any relationship between the number of pizzas and how long the order takes to prepare?**
+- Create a CTE called `pizza_prep_time` that groups orders by `pizza_count` and averages the prep time
+- Subtract `order_time` from `pickup_time`, convert it to minutes with EXTRACT(EPOCH ...) / 60 (turns seconds into minutes) and rounds to 2 decimals
+  
 ```SQL
--- prep time for every order
-SELECT 
-    c.order_time::DATE AS order_date,
-    c.order_id,
-    COUNT(*) AS pizza_count,
-    ROUND(EXTRACT(EPOCH FROM (r.pickup_time - c.order_time)) / 60::INT,2) AS prep_time
-FROM customer_orders c 
-INNER JOIN runner_orders r  
-    ON c.order_id = r.order_id
-WHERE r.cancellation IS NULL
-GROUP BY c.order_id, c.order_time, r.pickup_time, c.customer_id  
-
--- avg per pizza count
 WITH pizza_prep_time AS(
     SELECT 
         c.order_id,
@@ -346,12 +271,18 @@ GROUP BY pizza_count;
 ```
 **Result:**
 
-<img width="566" height="275" alt="3 1" src="https://github.com/user-attachments/assets/96ff9d4d-203e-4558-b884-16845cfd5fb9" /><br>
 <img width="341" height="158" alt="3 2" src="https://github.com/user-attachments/assets/84d33cd8-7e5c-4c34-ba7d-79d4c3e133cf" /><br>
 
+- A single pizza roughly takes 12 minutes to prepare, 2 pizzas take about 18 minutes and 3 pizzas take about 29 minutes.
+- We can roughly concluded that it takes about 10 minutes to prepare each pizza.
+
 **4. What was the average distance travelled for each customer?**
+- JOIN `customer_orders` to get each order’s customer, since `runner_orders` has the distance but not `customer_id`
+- Relied on AVG ignoring NULL distances, so cancelled orders are excluded without a separate filter
+- Cast to NUMERIC so ROUND(..., 2) works
+
 ```SQL
-SELECT DISTINCT(c.customer_id), ROUND(AVG(r.distance_km)::numeric,2) AS avg_distance FROM runner_orders r   
+SELECT DISTINCT(c.customer_id), ROUND(AVG(r.distance_km)::NUMERIC,2) AS avg_distance FROM runner_orders r   
 INNER JOIN customer_orders c 
     ON r.order_id = c.order_id
 GROUP BY c.customer_id
@@ -374,6 +305,10 @@ FROM runner_orders;
 <img width="516" height="104" alt="5" src="https://github.com/user-attachments/assets/150b3c02-88df-4fbd-adbe-640dd9d8398f" /><br>
 
 **6. What was the average speed for each runner for each delivery and do you notice any trend for these values?**
+- JOIN `customer_orders` to `runner_orders` and keeps only delivered orders.
+- `r.distance_km * 60 / r.duration_mins` converts speed to km/h. Duration is in minutes, so multiplying distance by 60 first is the same as dividing distance by hours.
+- GROUP BY includes `order_id`, so you get one row per delivery, and COUNT(*) gives the number of pizzas in that delivery.
+
 ```SQL
 SELECT
     r.runner_id,
@@ -392,7 +327,15 @@ GROUP BY r.runner_id, r.order_id, r.distance_km, r.duration_mins;
 
 <img width="856" height="272" alt="6" src="https://github.com/user-attachments/assets/7aa9e6bc-ac97-4820-a9fc-a7f7dcf12954" /><br>
 
+- Runner 1's average speed is from 38km/h to 60km/h.
+- Runner 2's average speed is from 35km/h to 94km/h.
+- Runner 3's average speed is 40km/h.
+- Runner 2 has the highest average speed, however for the same distance, runner 2 speed fluctuates.
+
 **7. What is the successful delivery percentage for each runner?**
+- Use a CTE called `success_rate` to act as a tracker for the total of successful delivery attempts using a SUM(CASE...) combination
+- `successful_attempts * 100.0/total_attempts` calculates for the percentage rate and ROUND keeps it to 2 decimal places
+  
 ```SQL
 WITH success_rate AS(
     SELECT 
