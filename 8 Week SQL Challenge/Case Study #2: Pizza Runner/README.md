@@ -214,7 +214,7 @@ ORDER BY day_of_week;
 
 ### B. Runner and Customer Experience
 **1. How many runners signed up for each 1 week period? (i.e. week starts 2021-01-01)**
-- Use `'2021-01-01'` as a fixed anchor instead of DATE_TRUNC('week', ...), since the question defines weeks starting on that date, not on Monday
+- Use `'2021-01-01'` as a fixed anchor instead of DATE_TRUNC('week', ...), since the question defines weeks starting on that date, whereas DATE_TRUNC('week', ...) starts weeks on Monday
 
 ```SQL
 SELECT
@@ -230,7 +230,8 @@ ORDER BY 1;
 <img width="450" height="152" alt="1" src="https://github.com/user-attachments/assets/a231acbd-6345-4785-82b2-37061018e875" /><br>
 
 **2. What was the average time in minutes it took for each runner to arrive at the Pizza Runner HQ to pickup the order?**
-- JOIN `customer_orders` to get each order’s `order_time`, then converted the time gap referred as `prep_time` from an interval to minutes with EXTRACT(EPOCH ...) / 60 so it could be averaged
+- JOIN `customer_orders` to get each order’s `order_time`, since `runner_orders` only has the pickup time
+- Subtract `order_time` from `pickup_time` to get prep time, convert prep time from an interval to minutes with EXTRACT(EPOCH ...) / 60, since an interval can’t be averaged directly and round to 2 decimals for readability
 
 ```SQL
 SELECT 
@@ -248,8 +249,7 @@ GROUP BY r.runner_id;
 
 
 **3. Is there any relationship between the number of pizzas and how long the order takes to prepare?**
-- Create a CTE called `pizza_prep_time` that groups orders by `pizza_count` and averages the prep time
-- Subtract `order_time` from `pickup_time`, convert it to minutes with EXTRACT(EPOCH ...) / 60 (turns seconds into minutes) and rounds to 2 decimals
+- Create a CTE called `pizza_prep_time` that groups orders by `pizza_count` and AVG the prep time using EXTRACT(EPOCH ...) / 60 and ROUND to 2 decimal places
   
 ```SQL
 WITH pizza_prep_time AS(
@@ -279,7 +279,7 @@ GROUP BY pizza_count;
 **4. What was the average distance travelled for each customer?**
 - JOIN `customer_orders` to get each order’s customer, since `runner_orders` has the distance but not `customer_id`
 - Relied on AVG ignoring NULL distances, so cancelled orders are excluded without a separate filter
-- Cast to NUMERIC so ROUND(..., 2) works
+- Cast to NUMERIC, to retrieve an exact decimal, not a whole number and ROUND to 2 decimal places for readability
 
 ```SQL
 SELECT DISTINCT(c.customer_id), ROUND(AVG(r.distance_km)::NUMERIC,2) AS avg_distance FROM runner_orders r   
@@ -305,9 +305,9 @@ FROM runner_orders;
 <img width="516" height="104" alt="5" src="https://github.com/user-attachments/assets/150b3c02-88df-4fbd-adbe-640dd9d8398f" /><br>
 
 **6. What was the average speed for each runner for each delivery and do you notice any trend for these values?**
-- JOIN `customer_orders` to `runner_orders` and keeps only delivered orders.
-- `r.distance_km * 60 / r.duration_mins` converts speed to km/h. Duration is in minutes, so multiplying distance by 60 first is the same as dividing distance by hours.
-- GROUP BY includes `order_id`, so you get one row per delivery, and COUNT(*) gives the number of pizzas in that delivery.
+- JOIN `customer_orders` to `runner_orders` and keep only delivered orders
+- `r.distance_km * 60 / r.duration_mins` converts speed to km/h, `duration` is in minutes, so multiplying distance by 60 first is the same as dividing distance by hours
+- GROUP BY `order_id` to get one row per delivery, so COUNT(*) gives the number of pizzas in each delivery
 
 ```SQL
 SELECT
@@ -333,8 +333,8 @@ GROUP BY r.runner_id, r.order_id, r.distance_km, r.duration_mins;
 - Runner 2 has the highest average speed, however for the same distance, runner 2 speed fluctuates.
 
 **7. What is the successful delivery percentage for each runner?**
-- Use a CTE called `success_rate` to act as a tracker for the total of successful delivery attempts using a SUM(CASE...) combination
-- `successful_attempts * 100.0/total_attempts` calculates for the percentage rate and ROUND keeps it to 2 decimal places
+- Use a CTE called `success_rate` to act as a tracker for the total and successful deliveries using SUM(CASE WHEN...)
+- Calculate the percentage as `successful_attempts * 100.0/total_attempts` 
   
 ```SQL
 WITH success_rate AS(
@@ -360,6 +360,8 @@ ORDER BY runner_id;
 
 ### C. Ingredient Optimisation
 **1. What are the standard ingredients for each pizza?**
+- Use UNNEST(STRING_TO_ARRAY(`toppings`, ',')) to split each comma-separated string of `topping_ids` into an array, then expand the array into one row per topping. Without this, multiple toppings stay packed in a single cell and can’t be counted or joined.
+- Wrapped the result in TRIM to remove the leading spaces left over from the comma separation
 
 ```SQL
 WITH pizza_toppings_cte AS(
@@ -382,6 +384,8 @@ ORDER BY ptc.pizza_id;
 <img width="314" height="436" alt="1" src="https://github.com/user-attachments/assets/5f6e3938-2c74-4be0-8abd-acc9f3460b56" /><br>
 
 **2. What was the most commonly added extra?**
+- Create a CTE called `extra_topping_cte` that applies the same TRIM(UNNEST(STRING_TO_ARRAY(...))) logic to the extras column and uses COUNT(*) to count how often each topping was added across all customer orders
+- Joined to `pizza_toppings` on `topping_id` so the output shows topping names instead of IDs, and sorted by count in descending order so the most popular extra appears first
 
 ```SQL
 WITH extra_topping_cte AS(
@@ -406,6 +410,7 @@ ORDER BY etc.extra_toppings_count DESC;
 <img width="579" height="170" alt="2" src="https://github.com/user-attachments/assets/2d06fd51-21e5-4960-9ca1-3130c2b8f431" /><br>
 
 **3. What was the most common exclusion?**
+- Reused the same approach as the extras question, swapping `extras` for `exclusions`
 
 ```SQL
 WITH exclusion_topping_cte AS(
@@ -435,48 +440,45 @@ ORDER BY etc.exclusion_toppings_count DESC;
    **- `Meat Lovers - Extra Bacon`**<br>
    **- `Meat Lovers - Exclude Cheese, Bacon - Extra Mushroom, Peppers`**<br>
 
+- Convert comma-separated topping IDs into names with STRING_TO_ARRAY, a cast to int[], and STRING_AGG, so each order shows readable toppings instead of IDs.
+- Built the order description with || and COALESCE, so orders without exclusions or extras skip that segment instead of returning NULL.
+
 ```SQL
-WITH cleaned_data AS(
-    SELECT
-        order_id,
-        pizza_id,
-        NULLIF(NULLIF(TRIM(exclusions), ''), 'null') AS exclusions,
-        NULLIF(NULLIF(TRIM(extras), ''), 'null') AS extras
-    FROM customer_orders
-)
 SELECT
-    cd.order_id,
-    cd.pizza_id,
-    cd.exclusions,
-    cd.extras,
+    c.order_id,
+    c.pizza_id,
+    c.exclusions,
+    c.extras,
     pn.pizza_name
         || COALESCE(' - Exclude ' || (
             SELECT STRING_AGG(pt.topping_name, ', ' ORDER BY pt.topping_name)
             FROM pizza_toppings pt 
             WHERE pt.topping_id = ANY (
-                STRING_TO_ARRAY(REPLACE(cd.exclusions, ' ', ''), ',')::int[]
+                STRING_TO_ARRAY(REPLACE(c.exclusions, ' ', ''), ',')::int[]
             )
         ), '')
         || COALESCE(' - Extra ' || (
             SELECT STRING_AGG(pt.topping_name, ', ' ORDER BY pt.topping_name)
             FROM pizza_toppings pt 
             WHERE pt.topping_id = ANY (
-                STRING_TO_ARRAY(REPLACE(cd.extras, ' ', ''), ',')::int[]
+                STRING_TO_ARRAY(REPLACE(c.extras, ' ', ''), ',')::int[]
             )
         ), '') AS order_item
-FROM cleaned_data cd
+FROM customer_orders c
 INNER JOIN pizza_names pn
-    ON pn.pizza_id = cd.pizza_id
+    ON pn.pizza_id = c.pizza_id
 INNER JOIN runner_orders r 
-    ON r.order_id = cd.order_id
+    ON r.order_id = c.order_id
 WHERE r.cancellation IS NULL OR r.cancellation IN ('', 'null')
-ORDER BY cd.order_id;
+ORDER BY c.order_id;
 ```
 **Result:**
 
 <img width="1015" height="371" alt="4" src="https://github.com/user-attachments/assets/556a80db-47ce-41d0-a9b0-2aad75507cc0" /><br>
 
 **6. What is the total quantity of each ingredient used in all delivered pizzas sorted by most frequent first?**
+- Create a CTE called `pizza_toppings_cte` that uses TRIM(UNNEST(STRING_TO_ARRAY(...))) to turn each pizza’s topping list into one row per topping
+- Filter for successful deliveries only and sorted by COUNT in descending order so the most frequent ingredient is at the top
 
 ```SQL
 WITH pizza_toppings_cte AS(
@@ -505,6 +507,8 @@ ORDER BY qty_count DESC;
 
 ### D. Pricing and Ratings
 **1. If a Meat Lovers pizza costs $12 and Vegetarian costs $10 and there were no charges for changes - how much money has Pizza Runner made so far if there are no delivery fees?**
+- Use a CASE statement to assign each `pizza_id` its price, then SUM to total the revenue across orders
+  
 ```SQL
 SELECT 
     SUM(
@@ -525,6 +529,9 @@ WHERE r.cancellation IS NULL;
 
 **2. What if there was an additional $1 charge for any pizza extras?**
    **- Add cheese is $1 extra**
+- Created a CTE called `count_modification_cte` that counts the extras on each order
+- Reuse the SUM + CASE pricing logic and added the extras count, since each extra adds a $1 charge
+
 ```SQL
 WITH count_modification_cte AS(
     SELECT
@@ -556,6 +563,9 @@ WHERE r.cancellation IS NULL;
 <img width="174" height="119" alt="2" src="https://github.com/user-attachments/assets/b4108ee2-a586-4016-a8a0-f3b11ff7e445" /><br>
 
 **3. The Pizza Runner team now wants to add an additional ratings system that allows customers to rate their runner, how would you design an additional table for this new dataset - generate a schema for this new table and insert your own data for ratings for each successful customer order between 1 to 5.**
+- Create a TABLE called `ratings` with order_id and rating as INT, since ratings are whole numbers and don’t need decimal precision
+- Use INSERT to add the values, then SELECT * to confirm the data loaded correctly
+
 ```SQL
 CREATE TABLE ratings (
     order_id INT,
@@ -592,6 +602,7 @@ SELECT * FROM ratings;
    **- Delivery duration**<br>
    **- Average speed**<br>
    **- Total number of pizzas**<br>
+  
 ```SQL
 SELECT
     c.customer_id,
@@ -617,6 +628,13 @@ GROUP BY c.customer_id, c.order_id, ro.runner_id, r.rating, c.order_time, ro.pic
 <img width="1379" height="278" alt="4" src="https://github.com/user-attachments/assets/539a9ce9-6476-4654-86ac-32f4252690ca" /><br>
 
 **5. If a Meat Lovers pizza was $12 and Vegetarian $10 fixed prices with no cost for extras and each runner is paid $0.30 per kilometre traveled - how much money does Pizza Runner have left over after these deliveries?**
+
+- Wrote two subqueries: one that sums total revenue from all pizza deliveries, and one (runner_earnings) that sums each runner’s total distance traveled and multiplies it by $0.30.
+Subtracted the runner earnings from revenue to get the remaining profit after runner costs.
+
+- Create two subqueries, one that SUMs the total revenue of all pizza deliveries and one that SUMs each runner earnings by the total distance they traveled, multiplied by $0.30
+- Subtract the runner earnings from revenue to get the remaining profit 
+  
 ```SQL
 SELECT
     (
@@ -636,9 +654,9 @@ SELECT
     -
     (
         SELECT
-            ROUND((SUM(distance_km) * 0.30)::NUMERIC,2) AS earnings
+            ROUND((SUM(distance_km) * 0.30)::NUMERIC,2) AS runner_earnings
         FROM runner_orders
-    ) AS cost_of_goods;
+    ) AS net_revenue;
 ```
 **Result:**
 
@@ -646,6 +664,10 @@ SELECT
 
 ### E. Bonus Questions
 **If Danny wants to expand his range of pizzas - how would this impact the existing data design? Write an INSERT statement to demonstrate what would happen if a new Supreme pizza with all the toppings was added to the Pizza Runner menu?**
+
+- Use INSERT into `pizza_recipes` to add a new `pizza_id` with its toppings stored as a comma-separated string, matching the existing format
+- Use INSERT into `pizza_names` to give the new `pizza_id` a name, so it shows up in joins with the other tables
+
 ```SQL
 INSERT INTO pizza_recipes (pizza_id, toppings) 
 VALUES (3, '1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12');
@@ -663,6 +685,19 @@ INNER JOIN pizza_recipes pr
 <img width="295" height="156" alt="2" src="https://github.com/user-attachments/assets/fe0c6fdc-bfaa-41ca-94e8-ccd1c2320aae" /><br>
 <img width="573" height="152" alt="3" src="https://github.com/user-attachments/assets/a3a815bd-8948-4139-bf8e-2569c34241f6" /><br>
 
+- Adding a new pizza called `Supreme` wouldn't change the data design dramatically. Rather we would be adding an additional `pizza_id` (= 3) across the following tables `pizza_recipes` that shows all the ingredients used and `pizza_name` that assigns a name to the `pizza_id`. 
+
 ## Challenges
 
 ## Key Takeaways
+**Buisness Insight**
+- Toppings: Bacon is the most popular extra (added 4 times), while Cheese is the most frequently excluded topping (excluded 4 times).
+- Order timing: Orders peak between the afternoon from 1 and 6 PM through late evening from 9 to 11 PM, so that’s when runner and kitchen capacity matter most.
+- Prep time: Larger orders take longer to prepare, a single pizza averaged about 12 minutes, while orders of three took about 29. Prep time doesn’t scale perfectly with pizza count, but the trend is upward.
+- Runner performance: Runner 2 has the highest average speed, but that average hides inconsistency. On deliveries of with about the same distance, Runner 2’s speed varies widely, so the average isn’t a reliable predictor of a given delivery. Runner 1 and Runner 3 are slower on average but more consistent.
+
+**Technical Skills**
+- Data cleaning: Handled messy data by converting empty strings and the text 'null' into true NULLs and assigning proper data types to values.
+- Working with timestamps: Calculated time gaps by subtracting timestamps, then converted intervals to minutes with EXTRACT(EPOCH ...) so they could be averaged. Used a fixed date anchor to define custom weeks.
+- Applying formulas in SQL: Translated real-world calculations into queries, including speed in km/h, success rate as a percentage, revenue with per-extra charges, and profit after runner costs.
+- Subqueries and CTEs: Used subqueries (and CTEs) to break multi-step problems into readable pieces.
