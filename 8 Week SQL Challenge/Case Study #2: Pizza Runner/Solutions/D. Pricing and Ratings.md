@@ -61,8 +61,8 @@ WHERE r.cancellation IS NULL;
 <img width="174" height="119" alt="2" src="https://github.com/user-attachments/assets/b4108ee2-a586-4016-a8a0-f3b11ff7e445" /><br>
 
 **3. The Pizza Runner team now wants to add an additional ratings system that allows customers to rate their runner, how would you design an additional table for this new dataset - generate a schema for this new table and insert your own data for ratings for each successful customer order between 1 to 5.**
-- Create a TABLE called `ratings` with order_id and rating as INT, since ratings are whole numbers and don’t need decimal precision
-- Use INSERT to add the values, then SELECT * to confirm the data loaded correctly
+- Create a TABLE called `ratings` with order_id and rating as INT, since ratings are whole numbers and decimal precision is not required
+- Use INSERT to add the values, then SELECT to confirm the data loaded correctly
 
 ```SQL
 CREATE TABLE ratings (
