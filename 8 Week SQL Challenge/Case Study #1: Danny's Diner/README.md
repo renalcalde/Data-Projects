@@ -26,6 +26,9 @@ Danny has shared 3 key datasets for this case study:
 </p>
 
 ## Question and Solution
+
+View the [full code](./dannys_diner.sql)
+
 **1. What is the total amount each customer spent at the restaurant?**
 ```SQL
 SELECT sales.customer_id, SUM(menu.price) as total_spending FROM sales
@@ -410,8 +413,6 @@ SELECT customer_id, order_date, product_name, price, member, ranking FROM rankin
 | C | 2021-01-01 | ramen | 12 | N | NULL |
 | C | 2021-01-01 | ramen | 12 | N | NULL |
 | C | 2021-01-07 | ramen | 12 | N | NULL |
-
-View the [full code](./dannys_dinner.sql)
 
 ## Challenges
 - For Q2, I previously made the error of counting all visits (so a person who ordered twice would be considered as two separate visits) which resulted in misinformed data. I went back and included **COUNT(DISTINCT())** so each day is counted once.
