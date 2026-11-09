@@ -1,3 +1,4 @@
+
 # 🍕 Case Study #2: Pizza Runner
 
 <p align="center">
@@ -39,9 +40,9 @@ Before investigating the data, I had to clean the dataset by handling the `null`
 ## Question and Solution
 This is a lengthy case study, thus, it is divided into five sections:
 
-**[A. Pizza Metrics](https://github.com/renalcalde/Data-Projects/blob/483c9579b22bb103fe7c453e0cebea1c9778b6ff/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/A.%20Pizza%20Metrics.md)**: Order volume, delivery success, and pizza type popularity across customers.
+**A. [Pizza Metrics](https://github.com/renalcalde/Data-Projects/blob/483c9579b22bb103fe7c453e0cebea1c9778b6ff/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/A.%20Pizza%20Metrics.md)**: Order volume, delivery success, and pizza type popularity across customers.
 
-**[B. Runner and Customer Experience](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/B.%20Runner%20and%20Customer%20Experience.md)**: Runner signups, pickup times, delivery speed, and how distance affects performance.
+**B. [Runner and Customer Experience](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/B.%20Runner%20and%20Customer%20Experience.md)**: Runner signups, pickup times, delivery speed, and how distance affects performance.
 
 **[C. Ingredient Optimisation](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/C.%20Ingredient%20Optimisation.md)**: Standard toppings, exclusions, and extras, including building ingredient lists for each order.
 
