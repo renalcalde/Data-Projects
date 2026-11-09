@@ -9,7 +9,7 @@ Mainly being a self-taught analysts, I'm working through all 8 case studies to s
 | # | Case Study | Status |
 |---|------------|-------|
 | 1 | [Danny's Diner](https://github.com/renalcalde/Data-Projects/tree/main/8%20Week%20SQL%20Challenge/Case%20Study%20%231%3A%20Danny's%20Diner) | ✅ Complete |
-| 2 | Pizza Runner | Coming soon |
+| 2 | [Pizza Runner](https://github.com/renalcalde/Data-Projects/tree/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner) | ✅ Complete |
 | 3 | Foodie-Fi | Coming soon |
 | 4 | Data Bank | Coming soon |
 | 5 | Data Mart | Coming soon | 
