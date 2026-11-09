@@ -59,7 +59,7 @@ UPDATE runner_orders
 SET duration_mins = REPLACE(duration_mins, 'mins', '')
 WHERE duration_mins LIKE '%min%';
 
--- changes all the type to the appropriate type
+-- changes all the type to the appropriate data type
 ALTER TABLE runner_orders
 ALTER COLUMN duration_mins TYPE INT USING duration_mins::INT;
 
