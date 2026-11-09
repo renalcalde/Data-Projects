@@ -411,6 +411,8 @@ SELECT customer_id, order_date, product_name, price, member, ranking FROM rankin
 | C | 2021-01-01 | ramen | 12 | N | NULL |
 | C | 2021-01-07 | ramen | 12 | N | NULL |
 
+View the [full code](./dannys_dinner.sql)
+
 ## Challenges
 - For Q2, I previously made the error of counting all visits (so a person who ordered twice would be considered as two separate visits) which resulted in misinformed data. I went back and included **COUNT(DISTINCT())** so each day is counted once.
 - For Q10, my first **CASE** statement gave the wrong totals because the first-week bonus and the sushi rule weren't ordered correctly. I fix this by putting the first-week condition first so it replaces the sushi rule, then limited the results to January with a date filter.
