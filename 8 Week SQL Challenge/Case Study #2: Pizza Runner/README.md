@@ -44,15 +44,15 @@ This is a lengthy case study, thus, it is divided into five sections:
 
 **B. [Runner and Customer Experience](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/B.%20Runner%20and%20Customer%20Experience.md)**: Runner signups, pickup times, delivery speed, and how distance affects performance.
 
-**[C. Ingredient Optimisation](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/C.%20Ingredient%20Optimisation.md)**: Standard toppings, exclusions, and extras, including building ingredient lists for each order.
+**C. [Ingredient Optimisation](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/C.%20Ingredient%20Optimisation.md)**: Standard toppings, exclusions, and extras, including building ingredient lists for each order.
 
-**[D. Pricing and Ratings](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/D.%20Pricing%20and%20Ratings.md)**: Revenue calculations, extra topping charges, and a new ratings table for runner performance.
+**D. [Pricing and Ratings](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/D.%20Pricing%20and%20Ratings.md)**: Revenue calculations, extra topping charges, and a new ratings table for runner performance.
 
-**[E. Bonus Questions](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/E.%20Bonus%20Questions.md)**: Extending the menu by adding a new pizza and updating the related tables.
+**E. [Bonus Questions](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/E.%20Bonus%20Questions.md)**: Extending the menu by adding a new pizza and updating the related tables.
 
 ## Challenges
-- Runner and Customer Experience (timestamps): Most questions in this section required manipulating timestamps, which introduced concepts I was unfamiliar with, including casting, EXTRACT(), and applying mathematical formulas. Getting the math and data types right took trial and error.
-- Ingredient Optimisation (Q4): This was the most challenging question because it combined several new concepts at once: cleaning NULLs, splitting comma-separated IDs into integer arrays, STRING_AGG, and COALESCE.
+- Most questions in the Runner and Customer Experience section proved to be challenging because it often required timestamp manipulation. It introduced concepts I was unfamiliar with, including casting, EXTRACT(), and applying mathematical formulas. Getting the math and data types right took trial and error.
+- Q4 from the Ingredient Optimization section was the most challenging because it required a different way of thinking. The exclusions and extras were stored as comma-separated text, so I had to clean the NULLs, split the values into integer arrays, and join them to the toppings table. I then used STRING_AGG to rebuild each order into a readable description, and COALESCE to handle orders with no exclusions or extras so they didn’t return NULL.
 
 ## Key Takeaways
 **Business Insights**
