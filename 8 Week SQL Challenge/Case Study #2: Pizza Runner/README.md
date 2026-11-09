@@ -40,19 +40,19 @@ Before investigating the data, I had to clean the dataset by handling the `null`
 ## Question and Solution
 This is a lengthy case study, thus, it is divided into five sections:
 
-**A. [Pizza Metrics](https://github.com/renalcalde/Data-Projects/blob/483c9579b22bb103fe7c453e0cebea1c9778b6ff/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/A.%20Pizza%20Metrics.md)**: Order volume, delivery success, and pizza type popularity across customers.
+**A. [Pizza Metrics](https://github.com/renalcalde/Data-Projects/blob/483c9579b22bb103fe7c453e0cebea1c9778b6ff/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/A.%20Pizza%20Metrics.md)**: Order volume, delivery success, and pizza type popularity across customers
 
-**B. [Runner and Customer Experience](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/B.%20Runner%20and%20Customer%20Experience.md)**: Runner signups, pickup times, delivery speed, and how distance affects performance.
+**B. [Runner and Customer Experience](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/B.%20Runner%20and%20Customer%20Experience.md)**: Runner signups, pickup times, delivery speed, and how distance affects performance
 
-**C. [Ingredient Optimisation](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/C.%20Ingredient%20Optimisation.md)**: Standard toppings, exclusions, and extras, including building ingredient lists for each order.
+**C. [Ingredient Optimisation](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/C.%20Ingredient%20Optimisation.md)**: Standard toppings, exclusions, and extras, including building ingredient lists for each order
 
-**D. [Pricing and Ratings](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/D.%20Pricing%20and%20Ratings.md)**: Revenue calculations, extra topping charges, and a new ratings table for runner performance.
+**D. [Pricing and Ratings](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/D.%20Pricing%20and%20Ratings.md)**: Revenue calculations, extra topping charges, and a new ratings table for runner performance
 
-**E. [Bonus Questions](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/E.%20Bonus%20Questions.md)**: Extending the menu by adding a new pizza and updating the related tables.
+**E. [Bonus Questions](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/E.%20Bonus%20Questions.md)**: Extending the menu by adding a new pizza and updating the related tables
 
 ## Challenges
 - Most questions in the Runner and Customer Experience section proved to be challenging because it often required timestamp manipulation. It introduced concepts I was unfamiliar with, including casting, EXTRACT(), and applying mathematical formulas. Getting the math and data types right took trial and error.
-- Q4 from the Ingredient Optimization section was the most challenging because it required a different way of thinking. The exclusions and extras were stored as comma-separated text, so I had to clean the NULLs, split the values into integer arrays, and join them to the toppings table. I then used STRING_AGG to rebuild each order into a readable description, and COALESCE to handle orders with no exclusions or extras so they didn’t return NULL.
+- Q4 from the Ingredient Optimization section was the most challenging because it required a different way of thinking, hence I had to learn new concepts and apply them. The exclusions and extras were stored as comma-separated text, so I had to clean the NULLs, split the values into integer arrays, and join them to the toppings table. I then used STRING_AGG to rebuild each order into a readable description, and COALESCE to handle orders with no exclusions or extras so they didn’t return NULL.
 
 ## Key Takeaways
 **Business Insights**
@@ -62,7 +62,7 @@ This is a lengthy case study, thus, it is divided into five sections:
 - Runner 2 has the highest average speed, but that average hides inconsistency. On deliveries of about the same distance, Runner 2’s speed varies widely, so the average isn’t a reliable predictor of any given delivery. Runner 1 and Runner 3 are slower on average but more consistent.
 
 **Technical Skills**
-- **Data cleaning**: Converted empty strings and the text 'null' into true NULLs and cast values to proper data types.
-- **Working with timestamps**: Calculated time gaps by subtracting timestamps, converted intervals to minutes with EXTRACT(), cast results to the proper data type, and used a fixed date anchor to define custom weeks.
-- **Applying formulas in SQL**: Translated real-world calculations into queries, including speed in km/h, success rate as a percentage, revenue with per-extra charges, and profit after runner costs.
-- **Subqueries and CTEs**: Used subqueries and CTEs to break multi-step problems into readable pieces.
+- Converted empty strings and the text 'null' into true NULLs and cast values to proper data types.
+- Calculated time gaps by subtracting timestamps, converted intervals to minutes with EXTRACT(), cast results to the proper data type, and used a fixed date anchor to define custom weeks.
+- Translated real-world calculations into queries, including speed in km/h, success rate as a percentage, revenue with per-extra charges, and profit after runner costs.
+- Used subqueries and CTEs to break multi-step problems into readable pieces.
