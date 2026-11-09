@@ -35,7 +35,7 @@ Before investigating the data, I had to clean the dataset by handling the `null`
 - `customer_orders`: converted blank and `'null'` values in `exclusions` and `extras` to NULL
 - `runner_orders`: similar fix for `cancellation`, and I turned `pickup_time`, `distance`, and `duration` into usable data types
 
-[View the full script](./data_cleaning.sql)
+View the [full code](./data_cleaning.sql)
 
 ## Question and Solution
 This is a lengthy case study, thus, it is divided into five sections:
@@ -49,6 +49,8 @@ This is a lengthy case study, thus, it is divided into five sections:
 **D. [Pricing and Ratings](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/D.%20Pricing%20and%20Ratings.md)**: Revenue calculations, extra topping charges, and a new ratings table for runner performance
 
 **E. [Bonus Questions](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/E.%20Bonus%20Questions.md)**: Extending the menu by adding a new pizza and updating the related tables
+
+View the [full code](./pizza_runner.sql)
 
 ## Challenges
 - Most questions in the Runner and Customer Experience section proved to be challenging because it often required timestamp manipulation. It introduced concepts I was unfamiliar with, including casting, EXTRACT(), and applying mathematical formulas. Getting the math and data types right took trial and error.
