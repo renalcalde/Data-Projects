@@ -23,12 +23,12 @@ This case study analyzes Pizza Runner’s order, runner, and delivery data to un
 
 ## Entity Relationship Diagram
 There are 6 key datasets for this case study:
-- `runners` : Runner registration dates
-- `customer_orders` : One row per pizza ordered
-- `runner_orders` : One row per order, with pickup/delivery details and `cancellation` status
-- `pizza_names` : The two pizzas: Meat Lovers and Vegetarian
-- `pizza_recipes` : Standard toppings for each `pizza_id`
-- `pizza_toppings` : Topping names and their `topping_id`
+  - `runners` : Runner registration dates
+  - `customer_orders` : One row per pizza ordered
+  - `runner_orders` : One row per order, with pickup/delivery details and `cancellation` status
+  - `pizza_names` : The two pizzas: Meat Lovers and Vegetarian
+  - `pizza_recipes` : Standard toppings for each `pizza_id`
+  - `pizza_toppings` : Topping names and their `topping_id`
 
 <p align="center">
 <img src="png/entity_relationship_diagram.png" alt="Entity Relationship Diagram" width="800">
@@ -688,16 +688,18 @@ INNER JOIN pizza_recipes pr
 - Adding a new pizza called `Supreme` wouldn't change the data design dramatically. Rather we would be adding an additional `pizza_id` (= 3) across the following tables `pizza_recipes` that shows all the ingredients used and `pizza_name` that assigns a name to the `pizza_id`. 
 
 ## Challenges
+- Runner and Customer Experience (timestamps): Most questions in this section required manipulating timestamps, which introduced concepts I was unfamiliar with, including casting, EXTRACT(), and applying mathematical formulas. Getting the math and data types right took trial and error.
+- Ingredient Optimisation (Q4): This was the most challenging question because it combined several new concepts at once: cleaning NULLs, splitting comma-separated IDs into integer arrays, STRING_AGG, and COALESCE. I broke it into pieces and tested each part separately to understand how they fit together.
 
 ## Key Takeaways
-**Buisness Insight**
-- Toppings: Bacon is the most popular extra (added 4 times), while Cheese is the most frequently excluded topping (excluded 4 times).
-- Order timing: Orders peak between the afternoon from 1 and 6 PM through late evening from 9 to 11 PM, so that’s when runner and kitchen capacity matter most.
-- Prep time: Larger orders take longer to prepare, a single pizza averaged about 12 minutes, while orders of three took about 29. Prep time doesn’t scale perfectly with pizza count, but the trend is upward.
-- Runner performance: Runner 2 has the highest average speed, but that average hides inconsistency. On deliveries of with about the same distance, Runner 2’s speed varies widely, so the average isn’t a reliable predictor of a given delivery. Runner 1 and Runner 3 are slower on average but more consistent.
+**Business Insights**
+- Bacon is the most popular extra (added 4 times), while Cheese is the most frequently excluded topping (excluded 4 times).
+- Orders peak in the afternoon (1-6 PM) and again in the late evening (9-11 PM).
+- Larger orders take longer to prepare. A single pizza averaged about 12 minutes, while orders of three took about 29. Prep time doesn’t scale perfectly with pizza count, but the trend is upward.
+- Runner 2 has the highest average speed, but that average hides inconsistency. On deliveries of about the same distance, Runner 2’s speed varies widely, so the average isn’t a reliable predictor of any given delivery. Runner 1 and Runner 3 are slower on average but more consistent.
 
 **Technical Skills**
-- Data cleaning: Handled messy data by converting empty strings and the text 'null' into true NULLs and assigning proper data types to values.
-- Working with timestamps: Calculated time gaps by subtracting timestamps, then converted intervals to minutes with EXTRACT(EPOCH ...) so they could be averaged. Used a fixed date anchor to define custom weeks.
+- Data cleaning: Converted empty strings and the text 'null' into true NULLs and cast values to proper data types.
+- Working with timestamps: Calculated time gaps by subtracting timestamps, converted intervals to minutes with EXTRACT(), cast results to the proper data type, and used a fixed date anchor to define custom weeks.
 - Applying formulas in SQL: Translated real-world calculations into queries, including speed in km/h, success rate as a percentage, revenue with per-extra charges, and profit after runner costs.
-- Subqueries and CTEs: Used subqueries (and CTEs) to break multi-step problems into readable pieces.
+- Subqueries and CTEs: Used subqueries and CTEs to break multi-step problems into readable pieces.
