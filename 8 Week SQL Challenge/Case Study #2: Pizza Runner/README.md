@@ -10,11 +10,6 @@
 - [Entity Relationship Diagram](#entity-relationship-diagram)
 - [Data Cleaning](#data-cleaning)
 - [Question & Solution](#question-and-solution)
-  - [A. Pizza Metrics](#a-pizza-metrics)
-  - [B. Runner and Customer Experience](#b-runner-and-customer-experience)
-  - [C. Ingredient Optimisation](#c-ingredient-optimisation)
-  - [D. Pricing and Ratings](#d-pricing-and-ratings)
-  - [E. Bonus Questions](#e-bonus-questions)
 - [Challenge](#challenges)
 - [Key Takeaway](#key-takeaways)
   
@@ -39,34 +34,24 @@ Before investigating the data, I had to clean the dataset by handling the `null`
 - `customer_orders`: converted blank and `'null'` values in `exclusions` and `extras` to NULL
 - `runner_orders`: similar fix for `cancellation`, and I turned `pickup_time`, `distance`, and `duration` into usable data types
 
-Full script: [data_cleaning.sql](./data_cleaning.sql)
+[View the full script](./data_cleaning.sql)
 
 ## Question and Solution
 This is a lengthy case study, thus, it is divided into five sections:
 
-### A. Pizza Metrics
-1. How many pizzas were ordered?
-2. How many unique customer orders were made?
-3. How many successful orders were delivered by each runner?
-4. How many of each type of pizza was delivered?
-5. How many Vegetarian and Meatlovers were ordered by each customer?
-6. What was the maximum number of pizzas delivered in a single order?
-7. For each customer, how many delivered pizzas had at least 1 change and how many had no changes?
-8. How many pizzas were delivered that had both exclusions and extras?
-9. What was the total volume of pizzas ordered for each hour of the day?
-10. What was the volume of orders for each day of the week?
+**[A. Pizza Metrics](https://github.com/renalcalde/Data-Projects/blob/483c9579b22bb103fe7c453e0cebea1c9778b6ff/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/A.%20Pizza%20Metrics.md)**: Order volume, delivery success, and pizza type popularity across customers.
 
-You can find the solution [here]()
+**[B. Runner and Customer Experience](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/B.%20Runner%20and%20Customer%20Experience.md)**: Runner signups, pickup times, delivery speed, and how distance affects performance.
 
-### B. Runner and Customer Experience
-### C. Ingredient Optimisation
-### D. Pricing and Ratings
-### E. Bonus Questions
+**[C. Ingredient Optimisation](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/C.%20Ingredient%20Optimisation.md)**: Standard toppings, exclusions, and extras, including building ingredient lists for each order.
 
+**[D. Pricing and Ratings](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/D.%20Pricing%20and%20Ratings.md)**: Revenue calculations, extra topping charges, and a new ratings table for runner performance.
+
+**[E. Bonus Questions](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner/Solutions/E.%20Bonus%20Questions.md)**: Extending the menu by adding a new pizza and updating the related tables.
 
 ## Challenges
 - Runner and Customer Experience (timestamps): Most questions in this section required manipulating timestamps, which introduced concepts I was unfamiliar with, including casting, EXTRACT(), and applying mathematical formulas. Getting the math and data types right took trial and error.
-- Ingredient Optimisation (Q4): This was the most challenging question because it combined several new concepts at once: cleaning NULLs, splitting comma-separated IDs into integer arrays, STRING_AGG, and COALESCE. I broke it into pieces and tested each part separately to understand how they fit together.
+- Ingredient Optimisation (Q4): This was the most challenging question because it combined several new concepts at once: cleaning NULLs, splitting comma-separated IDs into integer arrays, STRING_AGG, and COALESCE.
 
 ## Key Takeaways
 **Business Insights**
@@ -76,7 +61,7 @@ You can find the solution [here]()
 - Runner 2 has the highest average speed, but that average hides inconsistency. On deliveries of about the same distance, Runner 2’s speed varies widely, so the average isn’t a reliable predictor of any given delivery. Runner 1 and Runner 3 are slower on average but more consistent.
 
 **Technical Skills**
-- Data cleaning: Converted empty strings and the text 'null' into true NULLs and cast values to proper data types.
-- Working with timestamps: Calculated time gaps by subtracting timestamps, converted intervals to minutes with EXTRACT(), cast results to the proper data type, and used a fixed date anchor to define custom weeks.
-- Applying formulas in SQL: Translated real-world calculations into queries, including speed in km/h, success rate as a percentage, revenue with per-extra charges, and profit after runner costs.
-- Subqueries and CTEs: Used subqueries and CTEs to break multi-step problems into readable pieces.
+- **Data cleaning**: Converted empty strings and the text 'null' into true NULLs and cast values to proper data types.
+- **Working with timestamps**: Calculated time gaps by subtracting timestamps, converted intervals to minutes with EXTRACT(), cast results to the proper data type, and used a fixed date anchor to define custom weeks.
+- **Applying formulas in SQL**: Translated real-world calculations into queries, including speed in km/h, success rate as a percentage, revenue with per-extra charges, and profit after runner costs.
+- **Subqueries and CTEs**: Used subqueries and CTEs to break multi-step problems into readable pieces.
