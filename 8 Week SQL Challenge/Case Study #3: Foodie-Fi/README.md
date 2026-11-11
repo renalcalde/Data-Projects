@@ -14,11 +14,11 @@
 - [Key Takeaways](#key-takeaways)
   
 ## Objective
-Danny created a new streaming service that only had food related content called Foodie-Fi. This case study aims to help Danny answer important business question using subscription style digital data.
+Danny created a new streaming service that only had food related content called Foodie-Fi. This case study aims to help Danny answer important business question using customer data.
 
 ## Entity Relationship Diagram
 There are 2 key datasets for this case study:
-- `plans` : shows the name for each `plan_id` and the price
+- `plans` : shows the name and price for each `plan_id`
 - `subscriptions` : shows all customer orders
 
 <p align="center">
@@ -29,9 +29,13 @@ There are 2 key datasets for this case study:
 ### A. Customer Journey
 Based off the 8 sample customers provided in the sample from the subscriptions table, write a brief description about each customer’s onboarding journey.
 
-*Sample of `subscription` table*
+<details>
+  <summary>View full sample table</summary>
+  <img width="247" height="623" alt="1" src="https://github.com/user-attachments/assets/c34779eb-af35-4571-8d98-5f7ee8ca190c" /><br>
+</details>
 
-<img width="247" height="623" alt="1" src="https://github.com/user-attachments/assets/17003d46-b77f-4e43-b6e0-de4ccbaccb02" /><br>
+
+Before describing each customer's journey, I used a JOIN to combine the `subscription` and `plan` table to retrieve the name for each plan ID and filter for only the following customers in the sample.
 
 ```SQL
 SELECT s.customer_id, s.plan_id, p.plan_name, s.start_date FROM subscriptions s
@@ -42,23 +46,28 @@ WHERE customer_id IN (1, 2, 11, 13, 15, 16, 18, 19);
 
 **Result**:
 
-For this section, I will focus on three customers and share their onboarding journey.
+In this section, I will focus on three customers and share their onboarding journey.
 
-Customer 2 joined the free trial on September 20, 2020. After the end of the 7 day trial, Customer 2 subscribed to the pro annual plan on September 27, 2020.
+**Customer #2**
 
 <img width="556" height="91" alt="customer2" src="https://github.com/user-attachments/assets/d00a9086-98be-4e7a-849e-9b07d7a4083e" /><br>
+- Customer 2 joined the free trial on September 20, 2020. After the end of the 7 day trial, Customer 2 subscribed to the pro annual plan on September 27, 2020.
 
-Customer 15 initially started their subscription with a free trial on March 17, 2020. After the end of their 7 day trial, Customer 15 was automatically subscribed to the pro monthly plan on March 24, 2020. They then cancelled their Foodie-Fi service on April 29, 2020. 
+**Customer #15**
 
 <img width="554" height="113" alt="customer15" src="https://github.com/user-attachments/assets/23c47fd0-a6ec-40d2-8081-2d40212e66c9" /><br>
+- Customer 15 initially started their subscription with a free trial on March 17, 2020. After the end of their 7 day trial, Customer 15 was automatically subscribed to the pro monthly plan on March 24, 2020. They then cancelled their Foodie-Fi service on April 29, 2020. 
 
-Customer 16 initially started their subscription with a free trial on May 31, 2020. After the end of their 7 day trial, Customer 16 subscribed to the basic monthly plan on June 7, 2020. They then upgraded their plan to the pro annual on October 10, 2020.
+**Customer #16**
 
 <img width="558" height="117" alt="customer16" src="https://github.com/user-attachments/assets/d456e0f9-7bc5-400b-a1af-9e07c4b829ef" /><br>
+- Customer 16 initially started their subscription with a free trial on May 31, 2020. After the end of their 7 day trial, Customer 16 subscribed to the basic monthly plan on June 7, 2020. They then upgraded their plan to the pro annual on October 10, 2020.
 
 ### B. Data Analysis Questions
 
 **1. How many customers has Foodie-Fi ever had?**
+- Use COUNT() with DISTINCT to find the number of unique customer
+  
 ```SQL
 SELECT COUNT(DISTINCT(customer_id)) FROM subscriptions;
 ```
@@ -66,9 +75,13 @@ SELECT COUNT(DISTINCT(customer_id)) FROM subscriptions;
 **Result**:
 
 <img width="139" height="72" alt="1" src="https://github.com/user-attachments/assets/b6f29fb3-4aa3-4888-8edf-c83199e9b0c1" /><br>
-
+- Foodie-Fi has 1000 unique customers
 
 **2. What is the monthly distribution of trial plan start_date values for our dataset - use the start of the month as the group by value**
+- Use TO_CHAR() to retrieve the month from `start_date` and format 'MM-MONTH' for readability
+- Then used COUNT() on `plan_id` and filter with WHERE so only the trial plans are being counted
+- GROUP BY the month
+  
 ```SQL
 SELECT 
     TO_CHAR(s.start_date, 'MM - MONTH') AS month,
@@ -84,9 +97,12 @@ ORDER BY month;
 **Result**:
 
 <img width="248" height="336" alt="2" src="https://github.com/user-attachments/assets/89388264-c75f-4a13-8c4a-f3e951123d83" /><br>
-
+- March has the highest count with 94 trial subscriptions in comparison to February with 68 trial subscriptions. 
 
 **3. What plan start_date values occur after the year 2020 for our dataset? Show the breakdown by count of events for each plan_name**
+- EXTRACT() the year from `start_date` and filter for years after 2020 using WHERE
+- COUNT() on `plan_id` and GROUP BY `plan_id` and `plan_name` to retrieve the count for every plan after 2020
+  
 ```SQL
 SELECT 
     p.plan_name,
@@ -102,9 +118,15 @@ ORDER BY s.plan_id;
 **Result**:
 
 <img width="269" height="141" alt="3" src="https://github.com/user-attachments/assets/94575afa-4c80-492b-9f08-db6770099e23" /><br>
-
+- There seems to be no record of any customers on a trial subscription after 2020. A majority of customers are continuing with current plans or churning their subscription which holds the highest count. It's possible that there are no records of any new customers after 2020 and that current customers are continuing their subscription.
 
 **4. What is the customer count and percentage of customers who have churned rounded to 1 decimal place?**
+- Create a CTE called `customer_count_cte` that counts and filters for customers who have churned
+- Calculate the percentage of customers who have churned
+  - Multiply `customer_count` in the percentage formula by 1.0 to convert int to float and prevent int division which rounds down
+  - Use a scalar subquery to retrieve the total count of unique customers and apply a NULLIF to prevent any fatal runtime error if the denominator equals to zero
+  - ROUND() to 1 decimal place
+     
 ```SQL
 WITH customer_count_cte AS(
     SELECT 
@@ -125,9 +147,12 @@ FROM customer_count_cte;
 **Result**:
 
 <img width="338" height="71" alt="4" src="https://github.com/user-attachments/assets/a03832e7-2ea8-46f1-a745-ecbf137e7a9f" /><br>
-
+- 307 customers have churned their subscription, which is 30.7% of the subscription plan.
 
 **5. How many customers have churned straight after their initial free trial - what percentage is this rounded to the nearest whole number?**
+- Use LAG() to retrieve the previous row on `plan_id` with PARTITION BY `customer_id` and ORDER BY `start_date` as the previous plan
+- Filter with WHERE the previous plan was the trial period and their current plan is churned
+  
 ```SQL
 WITH plan_status_cte AS(
     SELECT
@@ -146,9 +171,15 @@ WHERE previous_plan = 0 AND current_plan = 4;
 **Result**:
 
 <img width="378" height="64" alt="5" src="https://github.com/user-attachments/assets/aad18674-0184-4377-b84b-c045a0376e35" /><br>
+- 92 of customers have churned after their trial period, which is 9% of the subscription plan.
 
 
 **6. What is the number and percentage of customer plans after their initial free trial?**
+- Create a CTE called `next_plan_cte` that uses LEAD() to look into the new row on `plan_id`, which looks at the next plan for every customer
+- COUNT() for every customer and calculate the percentage with the count of customers on a specific plan by the total count of customers, rounded to 1 decimal place
+- JOIN with plans to retrieve the name of each `plan_id` for readability
+- Filter so that the next plan is not null AND the customer's current plan is trial
+
 ```SQL
 WITH next_plan_cte AS(
     SELECT
@@ -172,7 +203,7 @@ ORDER BY np.next_plan;
 **Result**:
 
 <img width="463" height="136" alt="6" src="https://github.com/user-attachments/assets/b3bbc219-913a-4c19-8a47-1ffa0084282d" /><br>
-
+- Right after the trial period, a majority of customers subscribed to the basic monthly plan (54.6%). Followed by those who subscribed or was automatically enrolled into the pro monthly plan (32.5%). A low majority of customers would subscribed to the pro annual plan (3.7%) or churn their subscription (9.2%).
 
 **7. What is the customer count and percentage breakdown of all 5 plan_name values at 2020-12-31?**
 ```SQL
