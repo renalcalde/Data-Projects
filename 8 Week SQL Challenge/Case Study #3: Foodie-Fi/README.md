@@ -480,5 +480,4 @@ To validate the effectiveness of the change I would run a A/B test. One group of
 - Learned LEAD() and LAG() that either look at the next row or previous row depending on which function is being used
 - Learned how to use a WIDTH_BUCKET() to create bucket bins
 - Used a RECURSIVE CTE that references itself to process data until it reaches a stopping condition
-- Practiced my data analytics ability by thinking about how and why a data is acting a certain way and how to present the idea to others
-
+- Practiced my data analytic ability by thinking about how and why a data is acting a certain way and how to present the idea to others
