@@ -472,7 +472,7 @@ To validate the effectiveness of the change I would run a A/B test. One group of
 
 ## Key Takeaways
 **Business Insights**
-- After the trial period, 54.6% of customers subscribed to the basic monthly plan, while 32.5% were automatically enrolled or subscribed to the pro monthly and 3.7% to the pro annual plan (3.7%). Together, this suggests that 90% of trials convert to a paid plan which represents the trials effectiveness.
+- After the trial period, 54.6% of customers subscribed to the basic monthly plan, while 32.5% were automatically enrolled or subscribed to the pro monthly and 3.7% to the pro annual plan. Together, this suggests that 90% of trials convert to a paid plan which represents the trials effectiveness.
 - However, there is a concerning churning rate. Right after the trial period, 9% of customers immediately cancelled their subscription and by the end of the year, 23.6% had churned. This suggests that over time, customers decided to cancel their plan, which should be investigated further to find out why.
 - 195 customers have upgraded their plan to the annual plan in 2020, which is about 19.5% of customers. It takes on average 105 days for customers to upgrade their plan from the first day they joined Foodie-Fi, with the earliest making the switch in the first to 30 days or 120 to 150 days. This suggests two groups of customers: those who commit early and those who upgrade after a few months of use.
 
