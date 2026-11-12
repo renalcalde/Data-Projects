@@ -206,20 +206,24 @@ ORDER BY np.next_plan;
 - Right after the trial period, a majority of customers subscribed to the basic monthly plan (54.6%). Followed by those who subscribed or was automatically enrolled into the pro monthly plan (32.5%). A low majority of customers would subscribed to the pro annual plan (3.7%) or churn their subscription (9.2%).
 
 **7. What is the customer count and percentage breakdown of all 5 plan_name values at 2020-12-31?**
+- Create a CTE called `next_plan_cte` that counts the number of unique customers
+- Use a subquery to count the number of customers using LEAD() that looks at the next row in `plan_id`
+- Filter for plans before the year 2020 ends
+  
 ```SQL
-WITH plan_count_cte AS(
+WITH next_plan_cte AS(
     SELECT
         p.plan_name,
         COUNT(DISTINCT s.customer_id) AS customer_count
     FROM (
         SELECT customer_id, plan_id,
-            ROW_NUMBER() OVER(PARTITION BY customer_id ORDER BY start_date DESC) AS current_status
+            LEAD(plan_id) OVER(PARTITION BY customer_id ORDER BY plan_id) AS next_plan
         FROM subscriptions
         WHERE start_date <= '2020-12-31'
     ) s
     INNER JOIN plans p
         ON s.plan_id = p.plan_id
-    WHERE s.current_status = 1
+    WHERE next_plan IS NULL
     GROUP BY p.plan_id, p.plan_name
     ORDER BY p.plan_id
 )
@@ -227,33 +231,34 @@ SELECT
     plan_name,
     customer_count,
     ROUND((customer_count * 1.0 / (SELECT COUNT(DISTINCT(customer_id)) FROM subscriptions)) * 100, 1) AS percentage
-FROM plan_count_cte;
+FROM next_plan_cte;
 ```
 
 **Result**:
 
 <img width="465" height="168" alt="7" src="https://github.com/user-attachments/assets/5ce2df36-bb60-4409-8e0a-7fda1de9ac79" /><br>
-
+- The pro monthly plan seems to be the subscribed plan popular at the end of the year (32.6%).
 
 **8. How many customers have upgraded to an annual plan in 2020?**
+- COUNT with DISTINCT to count the number of every unique customer
+- Filter so that the results only return customers in the year 2020 with the pro annual plan 
 ```SQL
 SELECT
-    COUNT(DISTINCT s.customer_id) AS customer_count
-FROM (
-    SELECT customer_id, plan_id,
-        ROW_NUMBER() OVER(PARTITION BY customer_id ORDER BY start_date DESC) AS current_status
-    FROM subscriptions
-    WHERE EXTRACT(YEAR FROM start_date) = '2020' AND plan_id = 3
-) s
-WHERE s.current_status = 1
+    COUNT(DISTINCT customer_id) AS customer_count
+FROM subscriptions
+WHERE start_date BETWEEN '2020-01-01' AND '2020-12-31' AND plan_id = 3;
 ```
 
 **Result**:
 
 <img width="202" height="70" alt="8" src="https://github.com/user-attachments/assets/59dfb8e7-2446-4891-9582-49addf7b24e2" /><br>
+- 195 customers upgraded their previous plan to the annual plan in 2020.
 
 
 **9. How many days on average does it take for a customer to an annual plan from the day they join Foodie-Fi?**
+- Create two CTEs that filter for the proper `plan_id`: `trial_cte` that returns the date that customers had a trial subscription and `annual_cte` that returns the date customers have an annual plan
+- Subtract the annual date from trial date to get the number of days in between and use ROUND() + AVG() to round the average of days it takes for customer to join the pro annual plan
+  
 ```SQL
 WITH trial_cte AS(
     SELECT
@@ -279,9 +284,12 @@ INNER JOIN annual_cte ac
 **Result**:
 
 <img width="159" height="74" alt="9" src="https://github.com/user-attachments/assets/5a69dd36-2978-4c2a-8b8d-87a257fee2f7" /><br>
-
+- It takes on average 105 days for customers to join the pro annual plan from the day they joined Foodie-Fi.
 
 **10. Can you further breakdown this average value into 30 day periods (i.e. 0-30 days, 31-60 days etc)**
+- Using the same CTEs from Q9, add another CTE called `day_difference_cte` that counts the days between the annual date and trail date using a WIDTH_BUCKET that organizes the count of day in 30 day interval
+- Use a string concatenation, || that joins the average days to string text
+
 ```SQL
 WITH trial_cte AS(
     SELECT
@@ -315,9 +323,12 @@ ORDER BY avg_days
 **Result**:
 
 <img width="279" height="328" alt="10" src="https://github.com/user-attachments/assets/699f73c9-57a0-429d-a212-fcd57849c8e1" /><br>
-
+- From the beginning to the mid year, customers seem to upgrade their subscription to the pro annual plan with the first to 30 days and 120-150 days the highest. From 210 to 360 days, there was a drop of customers who didn't upgrade their subscripiton.
 
 **11. How many customers downgraded from a pro monthly to a basic monthly plan in 2020?**
+- Use LAG to count a row back to find the customers previous_plan
+- Filter so that the previous plan was a pro monthly and that the current plan is a basic monthly. EXTRACT() for the year so that it also filters for customers in 2020.
+  
 ```SQL
 WITH plan_status_cte AS(
     SELECT
@@ -335,7 +346,7 @@ WHERE previous_plan = 2 AND current_plan = 1 AND EXTRACT(YEAR FROM start_date) =
 **Result**:
 
 <img width="143" height="69" alt="11" src="https://github.com/user-attachments/assets/5d8b4d3f-d859-41bc-958e-8a3bb83368db" /><br>
-
+- 0 customers were reported to downgrade their plan from a pro monthly to a basic monthyl.
 
 ### C. Challenge Payment Question
 The Foodie-Fi team wants you to create a new payments table for the year 2020 that includes amounts paid by each customer in the subscriptions table with the following requirements:
