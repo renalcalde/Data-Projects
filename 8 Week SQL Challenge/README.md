@@ -10,8 +10,8 @@ Mainly being a self-taught analysts, I'm working through all 8 case studies to s
 |---|------------|-------|
 | 1 | [Danny's Diner](https://github.com/renalcalde/Data-Projects/tree/main/8%20Week%20SQL%20Challenge/Case%20Study%20%231%3A%20Danny's%20Diner) | ✅ Complete |
 | 2 | [Pizza Runner](https://github.com/renalcalde/Data-Projects/tree/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner) | ✅ Complete |
-| 3 | Foodie-Fi | In Progress 🚧 |
-| 4 | Data Bank | Coming soon |
+| 3 | [Foodie-Fi](https://github.com/renalcalde/Data-Projects/tree/main/8%20Week%20SQL%20Challenge/Case%20Study%20%233%3A%20Foodie-Fi) | ✅ Complete |
+| 4 | Data Bank | In Progress 🚧 |
 | 5 | Data Mart | Coming soon | 
 | 6 | Clique Bait | Coming soon |
 | 7 | Balanced Tree Clothing Co. | Coming soon |
