@@ -14,7 +14,7 @@
 - [Key Takeaways](#key-takeaways)
   
 ## Objective
-Danny created a new streaming service that only had food related content called Foodie-Fi. This case study aims to help Danny answer important business question using customer data.
+Foodie-Fi is a subscription streaming service created by Danny that offers only food-related content. Launched in 2020, it lets customers start with a free trial and then choose one of three plans (basic monthly, pro monthly, or pro annual). Customers can also cancel at any time. This case study uses Danny's subscription data to answer key business questions and help him make data-driven investment and product decisions.
 
 ## Entity Relationship Diagram
 There are 2 key datasets for this case study:
@@ -66,7 +66,7 @@ In this section, I will focus on three customers and share their onboarding jour
 ### B. Data Analysis Questions
 
 **1. How many customers has Foodie-Fi ever had?**
-- Use COUNT() with DISTINCT to find the number of unique customer
+- Use COUNT() with DISTINCT to find the number of unique customers
   
 ```SQL
 SELECT COUNT(DISTINCT(customer_id)) FROM subscriptions;
@@ -75,11 +75,11 @@ SELECT COUNT(DISTINCT(customer_id)) FROM subscriptions;
 **Result**:
 
 <img width="139" height="72" alt="1" src="https://github.com/user-attachments/assets/b6f29fb3-4aa3-4888-8edf-c83199e9b0c1" /><br>
-- Foodie-Fi has 1000 unique customers
+- Foodie-Fi had 1,000 unique customers.
 
-**2. What is the monthly distribution of trial plan start_date values for our dataset - use the start of the month as the group by value**
-- Use TO_CHAR() to retrieve the month from `start_date` and format 'MM-MONTH' for readability
-- Then used COUNT() on `plan_id` and filter with WHERE so only the trial plans are being counted
+**2. What is the monthly distribution of `trial` plan `start_date` values for our dataset - use the start of the month as the group by value**
+- Use TO_CHAR() to format the month from `start_date` into 'MM-MONTH' for readability
+- Then use COUNT() on `plan_id` and filter results for trial period
 - GROUP BY the month
   
 ```SQL
@@ -99,8 +99,8 @@ ORDER BY month;
 <img width="248" height="336" alt="2" src="https://github.com/user-attachments/assets/89388264-c75f-4a13-8c4a-f3e951123d83" /><br>
 - March has the highest count with 94 trial subscriptions in comparison to February with 68 trial subscriptions. 
 
-**3. What plan start_date values occur after the year 2020 for our dataset? Show the breakdown by count of events for each plan_name**
-- EXTRACT() the year from `start_date` and filter for years after 2020 using WHERE
+**3. What plan `start_date` values occur after the year 2020 for our dataset? Show the breakdown by count of events for each `plan_name`**
+- Filter results to show subscriptions after the year 2020 using an EXTRACT()
 - COUNT() on `plan_id` and GROUP BY `plan_id` and `plan_name` to retrieve the count for every plan after 2020
   
 ```SQL
@@ -118,14 +118,13 @@ ORDER BY s.plan_id;
 **Result**:
 
 <img width="269" height="141" alt="3" src="https://github.com/user-attachments/assets/94575afa-4c80-492b-9f08-db6770099e23" /><br>
-- There seems to be no record of any customers on a trial subscription after 2020. A majority of customers are continuing with current plans or churning their subscription which holds the highest count. It's possible that there are no records of any new customers after 2020 and that current customers are continuing their subscription.
-
+- There seems to be no record of any customers on a trial period after 2020. A majority of customers are continuing with current plans or cancelling their subscription which holds the highest count.
+  
 **4. What is the customer count and percentage of customers who have churned rounded to 1 decimal place?**
-- Create a CTE called `customer_count_cte` that counts and filters for customers who have churned
-- Calculate the percentage of customers who have churned
+- Use a CTE to filter and count for customers who have churned
+- Divide the number of customers who have churned by the total number of customers, then multiply by 100 to get the percentage and round to 1 decimal place
   - Multiply `customer_count` in the percentage formula by 1.0 to convert int to float and prevent int division which rounds down
   - Use a scalar subquery to retrieve the total count of unique customers and apply a NULLIF to prevent any fatal runtime error if the denominator equals to zero
-  - ROUND() to 1 decimal place
      
 ```SQL
 WITH customer_count_cte AS(
@@ -147,11 +146,11 @@ FROM customer_count_cte;
 **Result**:
 
 <img width="338" height="71" alt="4" src="https://github.com/user-attachments/assets/a03832e7-2ea8-46f1-a745-ecbf137e7a9f" /><br>
-- 307 customers have churned their subscription, which is 30.7% of the subscription plan.
+- 307 customers have churned their subscription, which is 30.7% of total customers.
 
 **5. How many customers have churned straight after their initial free trial - what percentage is this rounded to the nearest whole number?**
-- Use LAG() to retrieve the previous row on `plan_id` with PARTITION BY `customer_id` and ORDER BY `start_date` as the previous plan
-- Filter with WHERE the previous plan was the trial period and their current plan is churned
+- Create a CTE that looks into a customers previous plan using a LAG() function and the `plan_id` as their current plan
+- Filter the results so that previous plan is the trial period and their current plan is churned
   
 ```SQL
 WITH plan_status_cte AS(
@@ -171,14 +170,13 @@ WHERE previous_plan = 0 AND current_plan = 4;
 **Result**:
 
 <img width="378" height="64" alt="5" src="https://github.com/user-attachments/assets/aad18674-0184-4377-b84b-c045a0376e35" /><br>
-- 92 of customers have churned after their trial period, which is 9% of the subscription plan.
+- 92 of customers didn't continue with their subscription after their trial period, which is about 9% of customers.
 
 
 **6. What is the number and percentage of customer plans after their initial free trial?**
-- Create a CTE called `next_plan_cte` that uses LEAD() to look into the new row on `plan_id`, which looks at the next plan for every customer
-- COUNT() for every customer and calculate the percentage with the count of customers on a specific plan by the total count of customers, rounded to 1 decimal place
-- JOIN with plans to retrieve the name of each `plan_id` for readability
-- Filter so that the next plan is not null AND the customer's current plan is trial
+- Create a CTE that looks into a customer's next plan after their trial period ends using a LEAD() function and uses `plan_id` as their current plan
+- COUNT() for every customer GROUP BY the plan they joined right after
+- Filter the results so that the next plan is not null and the customer's current plan is a trial period
 
 ```SQL
 WITH next_plan_cte AS(
@@ -203,12 +201,11 @@ ORDER BY np.next_plan;
 **Result**:
 
 <img width="463" height="136" alt="6" src="https://github.com/user-attachments/assets/b3bbc219-913a-4c19-8a47-1ffa0084282d" /><br>
-- Right after the trial period, a majority of customers subscribed to the basic monthly plan (54.6%). Followed by those who subscribed or was automatically enrolled into the pro monthly plan (32.5%). A low majority of customers would subscribed to the pro annual plan (3.7%) or churn their subscription (9.2%).
+- Right after the trial period ends, a majority of customers subscribed to the basic monthly plan (54.6%). Followed by those who subscribed or was automatically enrolled into the pro monthly plan (32.5%). A low majority of customers would subscribed to the pro annual plan (3.7%) or not continue their subscription (9.2%).
 
-**7. What is the customer count and percentage breakdown of all 5 plan_name values at 2020-12-31?**
-- Create a CTE called `next_plan_cte` that counts the number of unique customers
-- Use a subquery to count the number of customers using LEAD() that looks at the next row in `plan_id`
-- Filter for plans before the year 2020 ends
+**7. What is the customer count and percentage breakdown of all 5 `plan_name` values at `2020-12-31`?**
+- Create a CTE that counts the number of unique customers from a subquery that uses LEAD() to look into the customer's next plan
+- Filter results for plans on or before the date '2020-12-31'
   
 ```SQL
 WITH next_plan_cte AS(
@@ -237,11 +234,12 @@ FROM next_plan_cte;
 **Result**:
 
 <img width="465" height="168" alt="7" src="https://github.com/user-attachments/assets/5ce2df36-bb60-4409-8e0a-7fda1de9ac79" /><br>
-- The pro monthly plan seems to be the subscribed plan popular at the end of the year (32.6%).
+- The pro monthly plan has the highest subscription by the end of the year (32.6%). However, churn rates have also increased near the end of the year (23.6%).
 
 **8. How many customers have upgraded to an annual plan in 2020?**
-- COUNT with DISTINCT to count the number of every unique customer
-- Filter so that the results only return customers in the year 2020 with the pro annual plan 
+- COUNT with DISTINCT to find the total count of every unique customer
+- Filter the results so it only returns customers in the year 2020 with a pro annual plan
+  
 ```SQL
 SELECT
     COUNT(DISTINCT customer_id) AS customer_count
@@ -254,9 +252,9 @@ WHERE start_date BETWEEN '2020-01-01' AND '2020-12-31' AND plan_id = 3;
 <img width="202" height="70" alt="8" src="https://github.com/user-attachments/assets/59dfb8e7-2446-4891-9582-49addf7b24e2" /><br>
 - 195 customers upgraded their previous plan to the annual plan in 2020.
 
-
+  
 **9. How many days on average does it take for a customer to an annual plan from the day they join Foodie-Fi?**
-- Create two CTEs that filter for the proper `plan_id`: `trial_cte` that returns the date that customers had a trial subscription and `annual_cte` that returns the date customers have an annual plan
+- Create two CTEs that filter for two types of `plan_id` on the `start_date`: the trial period date and the pro annual date
 - Subtract the annual date from trial date to get the number of days in between and use ROUND() + AVG() to round the average of days it takes for customer to join the pro annual plan
   
 ```SQL
@@ -284,11 +282,11 @@ INNER JOIN annual_cte ac
 **Result**:
 
 <img width="159" height="74" alt="9" src="https://github.com/user-attachments/assets/5a69dd36-2978-4c2a-8b8d-87a257fee2f7" /><br>
-- It takes on average 105 days for customers to join the pro annual plan from the day they joined Foodie-Fi.
+- It takes on average 105 days for customers to join the pro annual plan from the first day they joined Foodie-Fi.
 
 **10. Can you further breakdown this average value into 30 day periods (i.e. 0-30 days, 31-60 days etc)**
-- Using the same CTEs from Q9, add another CTE called `day_difference_cte` that counts the days between the annual date and trail date using a WIDTH_BUCKET that organizes the count of day in 30 day interval
-- Use a string concatenation, || that joins the average days to string text
+- Using the same CTEs from Q9, add another CTE that counts the days between the annual date and trial date using a WIDTH_BUCKET that groups the days into 12 equal 30 day intervals
+- Use a string concatenation, to present the buckets into readable text 
 
 ```SQL
 WITH trial_cte AS(
@@ -319,15 +317,16 @@ FROM day_difference_cte
 GROUP BY avg_days
 ORDER BY avg_days
 ```
+*Approach adapted from [Katie Huang's solution](https://github.com/katiehuangx/8-Week-SQL-Challenge/tree/main/Case%20Study%20%233%20-%20Foodie-Fi).*
 
 **Result**:
 
 <img width="279" height="328" alt="10" src="https://github.com/user-attachments/assets/699f73c9-57a0-429d-a212-fcd57849c8e1" /><br>
-- From the beginning to the mid year, customers seem to upgrade their subscription to the pro annual plan with the first to 30 days and 120-150 days the highest. From 210 to 360 days, there was a drop of customers who didn't upgrade their subscripiton.
+- From the beginning to the mid year, customers seem to upgrade their subscription to the pro annual plan with 0-30 days and 120-150 days being the highest. From 210 to 360 days, there was a significant drop of customers who didn't upgrade their subscription.
 
 **11. How many customers downgraded from a pro monthly to a basic monthly plan in 2020?**
-- Use LAG to count a row back to find the customers previous_plan
-- Filter so that the previous plan was a pro monthly and that the current plan is a basic monthly. EXTRACT() for the year so that it also filters for customers in 2020.
+- Create a CTE that uses LAG() to look back at a customer's previous plan and `plan_id` as their current plan
+- Filter the results so that the previous plan was a pro monthly and that the current plan is a basic monthly, with this change taking place in 2020
   
 ```SQL
 WITH plan_status_cte AS(
@@ -346,7 +345,7 @@ WHERE previous_plan = 2 AND current_plan = 1 AND EXTRACT(YEAR FROM start_date) =
 **Result**:
 
 <img width="143" height="69" alt="11" src="https://github.com/user-attachments/assets/5d8b4d3f-d859-41bc-958e-8a3bb83368db" /><br>
-- 0 customers were reported to downgrade their plan from a pro monthly to a basic monthyl.
+- 0 customers were reported to downgrade their plan from a pro monthly to a basic monthly.
 
 ### C. Challenge Payment Question
 The Foodie-Fi team wants you to create a new payments table for the year 2020 that includes amounts paid by each customer in the subscriptions table with the following requirements:
@@ -356,8 +355,128 @@ The Foodie-Fi team wants you to create a new payments table for the year 2020 th
 - upgrades from pro monthly to pro annual are paid at the end of the current billing period and also starts at the end of the month period
 - once a customer churns they will no longer make payments
 
+To solve this challenge, we would need to do the following steps:
+1. Retrieve subscriptions in 2020.
+2. Filter results so trial and churned plans are excluded.
+3. JOIN the `subscription` and `plans` table to get the plan name and price.
+4. Use a LEAD() function to look at a customer's next plan. Combine this with a COALESCE so that if the next plan is NULL, it will change the NULL into '2020-12-31' which is the last day of the year.
+5. Use a RECURSIVE CTE for the monthly payment dates. This will continue a customer's plan until it reaches the cutoff date or if they upgraded their plan to a pro annual plan.
+6. Create another CTE that uses a LAG() function to look at a customer's previous plan and its price. Use this to then create the reduce price for when a customer upgrades their basic monthly plan to either a pro monthly or pro annual plan.
+7. Add the payment_order using a ROW_NUMBER() function that ranks a customer's purchase order and resets for every customer.
+8. Tie everything together and add it to a new table called `payments`.
+
+```SQL
+DROP TABLE IF EXISTS payments;
+
+CREATE TABLE payments AS
+WITH RECURSIVE plan_cutoffs AS(
+    SELECT 
+        s.customer_id,
+        s.plan_id,
+        p.plan_name,
+        s.start_date,
+        COALESCE(LEAD(s.start_date) OVER(PARTITION BY s.customer_id ORDER BY s.start_date), '2020-12-31') AS cutoff_date,
+        p.price
+    FROM subscriptions s
+    INNER JOIN plans p
+        ON s.plan_id = p.plan_id
+    WHERE s.plan_id NOT IN (0,4) AND s.start_date <= '2020-12-31'
+),
+monthly_payments AS(
+    SELECT
+        customer_id,
+        plan_id,
+        plan_name,
+        start_date,
+        cutoff_date,
+        price
+    FROM plan_cutoffs
+
+    UNION ALL
+    
+    SELECT
+        customer_id,
+        plan_id,
+        plan_name,
+        (start_date + INTERVAL '1 month')::DATE,
+        cutoff_date,
+        price
+    FROM monthly_payments
+    WHERE cutoff_date > (start_date + INTERVAL '1 month')::DATE AND plan_id != 3
+),
+prior_plan AS(
+    SELECT *,
+        LAG(plan_id) OVER(PARTITION BY customer_id ORDER BY start_date) AS previous_plan,
+        LAG(price) OVER(PARTITION BY customer_id ORDER BY start_date) AS previous_price
+    FROM monthly_payments
+    ORDER BY customer_id, start_date
+)
+SELECT
+    customer_id,
+    plan_id,
+    plan_name,
+    start_date AS payment_date,
+    CASE
+        WHEN previous_plan = 1 AND plan_id IN (2,3) THEN price - previous_price 
+        ELSE price 
+    END AS amount,
+    ROW_NUMBER() OVER(PARTITION BY customer_id ORDER BY start_date) AS payment_order
+FROM prior_plan;
+
+SELECT * FROM payments;
+```
+*Approach adapted from [Eke's solution](https://blog.devgenius.io/8-week-sql-challenge-case-study-3-foodie-fi-solution-d9dddf30755f).*
+
+**Result**:
+
+*Not the full output. Showing a selected amount of rows*
+<img width="833" height="423" alt="Screenshot 2026-11-11 at 7 59 17 PM" src="https://github.com/user-attachments/assets/868c998e-061a-46ea-9a43-d989bcab89ac" /><br>
+
 
 ### D. Outside The Box Questions
 
-## Challenge
-## Key Takeaway
+**1. How would you calculate the rate of growth for Foodie-Fi?**
+I would compare the yearly revenue between the earliest and latest year (2020 and 2021) using the growth rate formula:
+  Growth rate = (current year revenue - previous year revenue) / previous year revenue * 100
+
+Using PostgreSQL, I gather the following data:
+- In 2020, Foodie-Fi made $54,663.20 (2,448 customers)
+- In 2021, Foodie-Fi made $13,810.20 (202 customers)
+This gives the growth rate -74.74%, however I would read this figure with caution. 2021 appears to cover part of the year, so the drop reflects an incomplete year and not a real decline in revenue.
+
+**2. What key metrics would you recommend Foodie-Fi management to track over time to assess performance of their overall business?**
+- Audience engagement: how often are customer interacting with the service and how long are they watching content
+- Quality of Experience: streaming performance & customer satisfaction
+- Subscriber growth and retention: new sign-ups, trial to paid conversion, and churn rates
+
+**3. What are some key customer journeys or experiences that you would analyse further to improve customer retention?**
+- Churn rates: Why has the churned rate continue to grow over the course of the year compared to when customers churned right after the trial period?
+- Upgrade paths: Why did customers upgrade to pro or annual plans compared to those who didn't? What encouraged them to upgrade?
+
+**4. If the Foodie-Fi team were to create an exit survey shown to customers who wish to cancel their subscription, what questions would you include in the survey?**
+- Did you find another service that offers a better price?
+- Did you face any difficulties navigating or using the service?
+- Did you find the content useful or relevant to you?
+
+**5. What business levers could the Foodie-Fi team use to reduce the customer churn rate? How would you validate the effectiveness of your ideas?**
+- Automated payments: make renewels automatic so customers don't lapse by accident
+- Grace period: give customers extra time to fix a failed payment before the plan ends
+To validate the effectiveness of the change I would run a A/B test. One group of customers have the change and a control group that doesn't and compare the churn rates between the two over the same period.  
+
+## Challenges
+- Q9 from the Data Analysis Section, my previous attempt grouped by the annual plan date instead of customers, which collapsed several customers into a single row. I fixed this by adding two queries that filter for one plan (the trial date and annual plan date), and using them on the same line which gives exactly one row per customer.
+- Q10 from the Data Analysis Section, I faced difficulties creating a 30-day bucket. After researching, I used `WIDTH_BUCKET()` to assign each customer to a bucket and `||` to concatenate the bounds into a readable label such as "0-30 days".
+- The Challenge Payment Question proved to be difficult because not only did I have to figure out how to approach the problem but I also had to combine several techniques: filtering the data, generate recurring payment dates, handling reduced prices and numbering payment orders. After researching, I found a source that helped guide me during this challenge.
+
+## Key Takeaways
+**Business Insights**
+- After the trial period, 54.6% of customers subscribed to the basic monthly plan, while 32.5% were automatically enrolled or subscribed to the pro monthly and 3.7% to the pro annual plan (3.7%). Together, this suggests that 90% of trials convert to a paid plan which represents the trials effectiveness.
+- However, there is a concerning churning rate. Right after the trial period, 9% of customers immediately cancelled their subscription and by the end of the year, 23.6% had churned. This suggests that over time, customers decided to cancel their plan, which should be investigated further to find out why.
+- 195 customers have upgraded their plan to the annual plan in 2020, which is about 19.5% of customers. It takes on average 105 days for customers to upgrade their plan from the first day they joined Foodie-Fi, with the earliest making the switch in the first to 30 days or 120 to 150 days. This suggests two groups of customers: those who commit early and those who upgrade after a few months of use.
+
+**Key Insights**
+- Learned LEAD() and LAG() that either look at the next row or previous row depending on which function is being used
+- Learned how to use a WIDTH_BUCKET() to create bucket bins
+- Used a RECURSIVE CTE that references itself to process data until it reaches a stopping condition
+- Practiced my data analytics ability by thinking about how and why a data is acting a certain way and how to present the idea to others
+
