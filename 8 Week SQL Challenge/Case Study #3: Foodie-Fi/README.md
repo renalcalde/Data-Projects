@@ -431,7 +431,7 @@ SELECT * FROM payments;
 
 **Result**:
 
-*Not the full output. Showing a selected amount of rows*
+*Not the full output: showing a selected amount of rows*
 <img width="833" height="423" alt="Screenshot 2026-11-11 at 7 59 17 PM" src="https://github.com/user-attachments/assets/868c998e-061a-46ea-9a43-d989bcab89ac" /><br>
 
 
