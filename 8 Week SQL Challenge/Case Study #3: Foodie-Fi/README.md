@@ -26,6 +26,8 @@ There are 2 key datasets for this case study:
 </p>
   
 ## Question & Solution
+View the [full code](foodie_fi.sql)
+
 ### A. Customer Journey
 Based off the 8 sample customers provided in the sample from the subscriptions table, write a brief description about each customer’s onboarding journey.
 
