@@ -9,6 +9,10 @@
 - [Objective](#objective)
 - [Entity Relationship Diagram](#entity-relationship-diagram)
 - [Question & Solution](#question-and-solution)
+  - [A. Customer Nodes Exploration](a.-customer-nodes-exploration)
+  - [B. Customer Transactions](b.-customer-transactions)
+  - [C. Data Allocation Challenge](c.-data-allocation-challenge)
+  - [E. Extension Request](e.-extension-request)
 - [Challenges](#challenges)
 - [Key Takeaways](#key-takeaways)
 
