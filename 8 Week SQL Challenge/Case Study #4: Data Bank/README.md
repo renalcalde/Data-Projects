@@ -502,4 +502,4 @@ View the [PowerPoint presentation](https://1drv.ms/p/c/5173473c9b608ebd/IQAXX-jg
 - Learn PERCENTILE_CONT() to calculate specific percentile value from a sorted set of numbers
 - Improve DATE_TRUNC() manipulation to round a date to a set interval such as the start of a month for grouping and month-end dates
 - LEFT JOIN with COALESCE() to keep rows with no match and turns NULL into 0 
-- Learn RANGE BETWEEN INTERVAL '30 days' PRECEDING AND CURRENT ROW defines a window by date rather than row count
+- Learn RANGE BETWEEN INTERVAL '30 days' PRECEDING AND CURRENT ROW to define a window by date rather than row count
