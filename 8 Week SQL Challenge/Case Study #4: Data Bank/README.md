@@ -158,7 +158,7 @@ ORDER BY txn_type;
 - Deposit has the highest count (2671) and total amount ($1,259,168). In comparison to withdrawal, who has the lowest count (1580) and total amount ($793,003). This suggests depositing money into the Data Bank system, is a popular feature for customers.
 
 **2. What is the average total historical deposit counts and amounts for all customers?**
-- Use a CTE to COUNT() AND SUM() the total amount for every customer who deposited money into Data Bank
+- Similar logic to Q1, but filter results so it returns the count and amount customers deposit into Data Bank
 - AVG() the count and amount and ROUND() to 2 decimal places
 
 ```SQL
@@ -180,12 +180,12 @@ FROM deposit_cte;
 **Result**:
 
 <img width="359" height="66" alt="2" src="https://github.com/user-attachments/assets/34d0943b-ded2-44ea-96d3-7f5dbb44edb5" /><br>
-- In the past, customers have deposited money into their account 5 times with average amount being $2,718.24.
+- In the past, customers have deposited money into their account about 5 times with average total amount being $2,718.24.
 
 **3. For each month - how many Data Bank customers make more than 1 deposit and either 1 purchase or 1 withdrawal in a single month?**
 - Create a CTE to act as a tracker and count the times a customer either deposit, purchase or withdrawals money
 - Filter the results so that deposit count is greater than one AND purchase or withdrawal count is exactly one time
-- Use EXTRACT() to get the month number and TO_CHAR to add the name of the month from `txn_date`, then GROUP BY the month
+- Use EXTRACT() to get the month number and TO_CHAR() to add the name of the month from `txn_date`, then GROUP BY the month
 
 ```SQL
 WITH count_cte AS(
@@ -212,9 +212,13 @@ ORDER BY month;
 
 <img width="270" height="143" alt="3" src="https://github.com/user-attachments/assets/6048bacc-6f7b-4534-bea8-4da4ca463cfb" /><br>
 - January has the highest count for customers who deposit more than 1 time and has exactly once purchased or withdrawal money from their account.
-- This shows that customers where highly conservative using their money in the beginning of the year or the first time they open a Data Bank account. April has a concerning low amount of customers who meet this requirement, it's possible that the data is incomplete for this month and should be investigated further.
+- This shows that customers where highly conservative using their money in the beginning of the year or the first time they open a Data Bank account. April has a concerningly low amount of customers who meet this requirement, it's possible that the data is incomplete for this month and should be investigated further.
 
 **4. What is the closing balance for each customer at the end of the month?**
+- Use DATE_TRUNC() to find the earliest and latest transaction dates across the table
+- Use a RECURSIVE CTE to implement all four months per customer even if there is no net change for that month
+- Calculate the monthly net change
+- LEFT JOIN the monthly net changes into the calendar and use COALESCE() to turn months with no transaction into 0. Use (SUM()OVER) to get each month's closing balance
 
 ```SQL
 
@@ -275,6 +279,10 @@ ORDER BY customer_id, month_end;
 <img width="611" height="328" alt="4" src="https://github.com/user-attachments/assets/6d8f97a1-f226-4945-907b-e2539b0d4991" /><br>
 
 **5. What is the percentage of customers who increase their closing balance by more than 5%?**
+- EXTRACT() the month number and use TO_CHAR() to assign names for each month for readability
+- Calculate for the net_change and use (SUM()OVER) to find the closing balance
+- Compare each closing balance to the previous row using lag and use NULLIF() to avoid dividing by zero
+- Filter results so customers who balance grew by more than 5% are kept
 
 ```SQL
 
@@ -315,6 +323,7 @@ WHERE percentage_increase > 5;
 **Result**:
 
 <img width="173" height="67" alt="5" src="https://github.com/user-attachments/assets/14d958a4-4040-4f9e-8d31-3b7243a3e01d" /><br>
+- About 75.8% of customers had an increase in their closing balance by more than 5%.
 
   
 ## Challenges
