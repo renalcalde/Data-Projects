@@ -25,7 +25,8 @@ There are 3 key datasets in this case study:
 <img src="png/entity_relationship_diagram.png" alt="Entity Relationship Diagram" width="800">
 </p>
 
-## Question & Solution
+## Question and Solution
+
 ### A. Customer Nodes Exploration
 **1. How many unique nodes are there on the Data Bank system?**
 - Use COUNT() with DISTINCT to find the number of unique nodes
