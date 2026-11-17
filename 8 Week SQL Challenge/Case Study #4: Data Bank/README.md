@@ -281,7 +281,7 @@ ORDER BY customer_id, month_end;
 **5. What is the percentage of customers who increase their closing balance by more than 5%?**
 - EXTRACT() the month number and use TO_CHAR() to assign names for each month for readability
 - Calculate for the net_change and use (SUM()OVER) to find the closing balance
-- Compare each closing balance to the previous row using lag and use NULLIF() to avoid dividing by zero
+- Compare each closing balance to the previous row using LAG() and use NULLIF() to avoid dividing by zero
 - Filter results so customers who balance grew by more than 5% are kept
 
 ```SQL
@@ -325,6 +325,174 @@ WHERE percentage_increase > 5;
 <img width="173" height="67" alt="5" src="https://github.com/user-attachments/assets/14d958a4-4040-4f9e-8d31-3b7243a3e01d" /><br>
 - About 75.8% of customers had an increase in their closing balance by more than 5%.
 
+### C. Data Allocation Challenge
+To test out a few different hypotheses - the Data Bank team wants to run an experiment where different groups of customers would be allocated data using 3 different options:
+
+- Option 1: data is allocated based off the amount of money at the end of the previous month
+- Option 2: data is allocated on the average amount of money kept in the account in the previous 30 days
+- Option 3: data is updated real-time
+  
+For this multi-part challenge question - you have been requested to generate the following data elements to help the Data Bank team estimate how much data will need to be provisioned for each option:
+
+- running customer balance column that includes the impact each transaction
+- customer balance at the end of each month
+- minimum, average and maximum values of the running balance for each customer
+
+**Using all of the data available - how much data would have been required for each option on a monthly basis?**
+
+**Option 1**
+- Use LAG() to retrieve the rows before to get the running_balance from the previous month
+- Use COALESCE() and filter results so it turns any negative values into 0 since data can't be negative
+  
+```SQL
+WITH cte AS(
+    SELECT 
+        customer_id,
+        EXTRACT(MONTH FROM txn_date) AS month,
+        TO_CHAR(txn_date, 'MON') AS month_end,
+        SUM(CASE WHEN txn_type = 'deposit' THEN txn_amount ELSE -txn_amount END) AS net_change
+    FROM customer_transactions
+    GROUP BY customer_id, month, month_end
+),
+cte2 AS(
+    SELECT
+        *,
+        SUM(net_change) OVER(PARTITION BY customer_id ORDER BY month) AS closing_balance
+    FROM cte
+),
+cte3 AS(
+    SELECT
+        *,
+        LAG(closing_balance) OVER (PARTITION BY customer_id ORDER BY customer_id, month) AS running_balance
+    FROM cte2
+)
+SELECT
+    month_end,
+    SUM(COALESCE(CASE WHEN running_balance < 0 THEN 0 ELSE running_balance END, 0)) AS data_allocated
+FROM cte3
+GROUP BY month_end, month
+ORDER BY month;
+```
+
+**Result**:
+
+<img width="328" height="138" alt="1" src="https://github.com/user-attachments/assets/47290898-bed3-4c54-8e70-3f4409a242a3" /><br>
+- Jan is 0 because there is no previous month to base off data allocation.
+- March has the highest data allocated with 240,602 while April has the lowest data allocated with 153,147.
+- Data allocation for this option seems to fluctuate since it relies on a single snapshot rather than an average.
+
+**Option 2**
+- Calculate for the daily net change
+- Use SUM()OVER() to retrieve the running total per customer ordered by date so each row is the customer's balance after that day's transaction
+- Use RANGE BETWEEN INTERVAL '30 days' PRECEDING AND CURRENT ROW to collect a customer's balance from the last 30 days and AVG()
+- Use ROW_NUMBER() to assign each customer's row within a month and rn = 1 to get their last transaction 
+
+```SQL
+WITH cte AS(
+    SELECT 
+        customer_id,
+        txn_date,
+        EXTRACT(MONTH FROM txn_date) AS month,
+        TO_CHAR(txn_date, 'MON') AS month_end,
+        SUM(CASE WHEN txn_type = 'deposit' THEN txn_amount ELSE -txn_amount END) AS net_change
+    FROM customer_transactions
+    GROUP BY customer_id, txn_date, month, month_end
+),
+cte2 AS(
+    SELECT
+        *,
+        SUM(net_change) OVER(PARTITION BY customer_id ORDER BY txn_date) AS closing_balance
+    FROM cte
+),
+cte3 AS(
+    SELECT
+        *,
+        AVG(closing_balance) OVER (
+            PARTITION BY customer_id
+            ORDER BY txn_date
+            RANGE BETWEEN INTERVAL '30 days' PRECEDING AND CURRENT ROW
+        ) AS running_balance
+    FROM cte2
+),
+cte4 AS(
+    SELECT
+        *,
+        ROW_NUMBER() OVER (PARTITION BY customer_id, month ORDER BY txn_date DESC) AS rn
+    FROM cte3
+)
+SELECT
+    month_end,
+    ROUND(SUM(CASE WHEN running_balance < 0 THEN 0 ELSE running_balance END), 0) AS data_allocated
+FROM cte4
+WHERE rn = 1
+GROUP BY month_end, month
+ORDER BY month;
+```
+
+**Result**:
+
+<img width="328" height="136" alt="2" src="https://github.com/user-attachments/assets/216960e7-4943-4c5c-8f77-237dfb475f0a" /><br>
+- March has the highest data allocated of 232,335 while April has the lowest of 152,190.
+- Data allocation for this option is moderately stable as it seems to react to month-to-month balance change, which makes this easier to predict.
+
+
+**Option 3**
+- Use SUM()OVER to find the current closing balance
+- Because data can't be negative, use SUM(CASE) to turn any value less than 0 into 0 
+
+```SQL
+WITH cte AS(
+    SELECT 
+        customer_id,
+        EXTRACT(MONTH FROM txn_date) AS month,
+        TO_CHAR(txn_date, 'MON') AS month_end,
+        SUM(CASE WHEN txn_type = 'deposit' THEN txn_amount ELSE -txn_amount END) AS net_change
+    FROM customer_transactions
+    GROUP BY customer_id, month, month_end
+),
+cte2 AS(
+    SELECT
+        *,
+        SUM(net_change) OVER(PARTITION BY customer_id ORDER BY month) AS closing_balance
+    FROM cte
+)
+SELECT
+    month_end,
+    SUM(CASE WHEN closing_balance < 0 THEN 0 ELSE closing_balance END) AS data_allocated
+FROM cte2
+GROUP BY month_end, month
+ORDER BY month;
+```
+
+**Result**:
+
+<img width="328" height="142" alt="3" src="https://github.com/user-attachments/assets/18b759d2-e0f0-4e8e-b1dd-06e3c886063d" /><br>
+- March has the highest data allocated of 240,065 while April has the lowest of 157,033
+- Data allocation for this option is the most stable and has the highest values. However, because this is updated in real time it can make it difficult to predict for future data storage.
+
+### E. Extension Request
+The Data Bank team wants you to use the outputs generated from the above sections to create a quick Powerpoint presentation which will be used as marketing materials for both external investors who might want to buy Data Bank shares and new prospective customers who might want to bank with Data Bank.
+
+1. Using the outputs generated from the customer node questions, generate a few headline insights which Data Bank might use to market it’s world-leading security features to potential investors and customers.
+
+2. With the transaction analysis - prepare a 1 page presentation slide which contains all the relevant information about the various options for the data provisioning so the Data Bank management team can make an informed decision.
+
+View the [PowerPoint presentation](https://1drv.ms/p/c/5173473c9b608ebd/IQAXX-jgqmG2QYO4XGUhNeQGAZc26y_HIOM6KUsbJu1Xzcg?e=f208Gy)
   
 ## Challenges
+
 ## Key Takeaways
+**Business Insights**
+- Australia has the highest customer count of 110 in comparison to Europe who only has 88 customers.
+- Each region has 5 distinct nodes that customers are frequently and randomly allocated to.
+- Customers are allocated to a new node on an average of 15 days. While all 5 regions share the same median (15 days) and 95th percentile (28 days), Africa and Europe share the same 80th percentile of 24 days while the remaining regions share 23 days. This suggests that Africa and Europe are only a day behind when it comes to allocating customers to a new node, however it still shows that nodes are frequently yet consistently allocated.
+- March has the highest data allocation all three options while April is the lowest in all three. This suggests that April's data may be incomplete and will need further investigation.
+- Baseline of 240k data per month is required for our customers.
+- Option 3 shows the highest and smoothest monthly totals, but because it updates in real time, data allocation changes constantly which may pose difficulties to forecast and can get expensive.
+- Option 2 allocates less and lags in real changes, but it's more predicatable and affordable since it relies on the previous 30 days. There options two seems the best option for data allocation and to incite new customers to join, should add a small welcome allocation for new customer's first 30 days which not only incites new customers but also helps prevent null for option 2.
+
+**Key Insights**
+- PERCENTILE_COUNT()
+- DATE_TRUNC()
+- LEFT JOIN
+- RANGE BETWEEN INTERVAL '30 days' PRECEDING AND CURRENT ROW
