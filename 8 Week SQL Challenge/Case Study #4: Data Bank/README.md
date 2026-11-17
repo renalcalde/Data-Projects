@@ -477,7 +477,7 @@ The Data Bank team wants you to use the outputs generated from the above section
 
 2. With the transaction analysis - prepare a 1 page presentation slide which contains all the relevant information about the various options for the data provisioning so the Data Bank management team can make an informed decision.
 
-View the [PowerPoint presentation](https://1drv.ms/p/c/5173473c9b608ebd/IQAXX-jgqmG2QYO4XGUhNeQGAZc26y_HIOM6KUsbJu1Xzcg?e=f208Gy)
+View the [PowerPoint presentation](https://1drv.ms/p/c/5173473c9b608ebd/IQAXX-jgqmG2QYO4XGUhNeQGAZc26y_HIOM6KUsbJu1Xzcg?e=eNEhfs)
   
 ## Challenges
 
