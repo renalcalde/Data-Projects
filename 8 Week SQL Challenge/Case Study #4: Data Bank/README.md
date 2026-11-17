@@ -13,13 +13,13 @@
 - [Key Takeaways](#key-takeaways)
 
 ## Objective
-Data Bank is more than a digital banking system, it's also the world's most secure distributed data storage platform! Created by Danny, customers are allocated cloud data storage limits which are directly linked to hoe much money they have in their account. The management team at Data Bank wants to increase their total customer base and use customer data to understand customer needs.
+Created by Danny, Data Bank is a digital banking system that also offers cloud storage that scales with a customer's balance.​ The management team at Data Bank wants to increase their total customer base and use customer data to understand demand needs.
 
 ## Entity Relationship Diagram
-There are 3 key datasets in this case study.
+There are 3 key datasets in this case study:
 - `regions` : both a customer's money and data is stored across the region in a network of nodes, which can be seen as bank branches/ stores
-- `customer_nodes` : customers are randomly distributed across the nodes according to their region to reduce the risk of hackers stealing information
-- `customer_transaction` : Stores all customers deposits, withdrawals and purchases made using their Data Bank debit card
+- `customer_nodes` : customers are randomly distributed across the nodes according to their region which reduces the risk of hackers stealing valuable information
+- `customer_transaction` : stores all customers deposits, withdrawals and purchases made using their Data Bank debit card
 
 <p align="center">
 <img src="png/entity_relationship_diagram.png" alt="Entity Relationship Diagram" width="800">
@@ -83,16 +83,19 @@ ORDER BY r.region_name;
 - Filter the results so that the `end_date` doesn't contain '9999-12-31' 
   
 ```SQL
+-- Step 1
 SELECT 
     MIN(start_date),
     MAX(end_date)
 FROM customer_nodes;
 
+-- Step 2
 SELECT 
     DISTINCT(end_date)
 FROM customer_nodes
 ORDER BY end_date DESC;
 
+-- Step 3
 SELECT 
     ROUND(AVG(end_date - start_date),2) AS avg_days
 FROM customer_nodes
@@ -103,7 +106,7 @@ WHERE end_date != '9999-12-31';
 
 <img width="156" height="64" alt="4" src="https://github.com/user-attachments/assets/4267f40a-4268-4bfe-a924-4e86248acd4d" /><br>
 - On average, customer's remain in a node for about 14.63 days or 15 days.
-- After checking that all customers have '9999-12-31' in their `end_date`, this suggests that '9999-12-31' is a placeholder that represents the current node that the customer is in. 
+- After checking that all customers have '9999-12-31' in their latest `end_date`, this suggests that '9999-12-31' is a placeholder that represents the current node that the customer is in. 
 
 **5. What is the median, 80th and 95th percentile for this same reallocation days metric for each region?**
 - Find the days between `end_date` and `start_date`
@@ -136,7 +139,7 @@ ORDER BY r.region_name;
 
 <img width="598" height="160" alt="5" src="https://github.com/user-attachments/assets/6a848fa2-f61b-450b-85ce-24261de158cf" /><br>
 - All of the regions share the same median of 15 days and a 95th percentile of 28 days. For the 80th percentile, Africa and Europe share 24 days while the remaining regions share 23.
-- While all the regions are closely similar, Africa and Europe appear to be only a day behind when it comes to reallocating their customers.
+- While all the regions are similarly consistent, Africa and Europe appear to be only a day behind when it comes to reallocating their customers.
 
 ### B. Customer Transactions
 **1. What is the unique count and total amount for each transaction type?**
@@ -159,7 +162,7 @@ ORDER BY txn_type;
 
 **2. What is the average total historical deposit counts and amounts for all customers?**
 - Similar logic to Q1, but filter results so it returns the count and amount customers deposit into Data Bank
-- AVG() the count and amount and ROUND() to 2 decimal places
+- AVG() the total count and amount
 
 ```SQL
 WITH deposit_cte AS(
@@ -180,7 +183,7 @@ FROM deposit_cte;
 **Result**:
 
 <img width="359" height="66" alt="2" src="https://github.com/user-attachments/assets/34d0943b-ded2-44ea-96d3-7f5dbb44edb5" /><br>
-- In the past, customers have deposited money into their account about 5 times with average total amount being $2,718.24.
+- Customers have deposited money into their account about 5 times with the average total overall being $2,718.24.
 
 **3. For each month - how many Data Bank customers make more than 1 deposit and either 1 purchase or 1 withdrawal in a single month?**
 - Create a CTE to act as a tracker and count the times a customer either deposit, purchase or withdrawals money
@@ -211,7 +214,7 @@ ORDER BY month;
 **Result**:
 
 <img width="270" height="143" alt="3" src="https://github.com/user-attachments/assets/6048bacc-6f7b-4534-bea8-4da4ca463cfb" /><br>
-- January has the highest count for customers who deposit more than 1 time and has exactly once purchased or withdrawal money from their account.
+- January has the highest count for customers who deposited more than 1 time and has exactly once purchased or withdrawal money from their account.
 - This shows that customers where highly conservative using their money in the beginning of the year or the first time they open a Data Bank account. April has a concerningly low amount of customers who meet this requirement, it's possible that the data is incomplete for this month and should be investigated further.
 
 **4. What is the closing balance for each customer at the end of the month?**
@@ -279,10 +282,9 @@ ORDER BY customer_id, month_end;
 <img width="611" height="328" alt="4" src="https://github.com/user-attachments/assets/6d8f97a1-f226-4945-907b-e2539b0d4991" /><br>
 
 **5. What is the percentage of customers who increase their closing balance by more than 5%?**
-- EXTRACT() the month number and use TO_CHAR() to assign names for each month for readability
 - Calculate for the net_change and use (SUM()OVER) to find the closing balance
 - Compare each closing balance to the previous row using LAG() and use NULLIF() to avoid dividing by zero
-- Filter results so customers who balance grew by more than 5% are kept
+- Filter results so customers whose balance grew by more than 5% are kept
 
 ```SQL
 
@@ -341,8 +343,11 @@ For this multi-part challenge question - you have been requested to generate the
 **Using all of the data available - how much data would have been required for each option on a monthly basis?**
 
 **Option 1**
-- Use LAG() to retrieve the rows before to get the running_balance from the previous month
-- Use COALESCE() and filter results so it turns any negative values into 0 since data can't be negative
+- Calculate each customer's monthly net change by adding deposits and subtracting purchases and withdrawals
+- Use SUM() OVER() to take a running total per customer to find each month's closing balance
+- Use LAG() to retrieve the previous month's closing balance since data allocation is based off the previous month
+- Use COALESCE() to treat missing values as 0 and SUM() + CASE WHEN to turn any negative values into 0 since data can't be negative
+- SUM() the results across all customers and GROUP BY month to get the total data allocated each month
   
 ```SQL
 WITH cte AS(
@@ -377,15 +382,14 @@ ORDER BY month;
 **Result**:
 
 <img width="328" height="138" alt="1" src="https://github.com/user-attachments/assets/47290898-bed3-4c54-8e70-3f4409a242a3" /><br>
-- Jan is 0 because there is no previous month to base off data allocation.
+- January contains 0 data because there is no previous month to base off data allocated.
 - March has the highest data allocated with 240,602 while April has the lowest data allocated with 153,147.
 - Data allocation for this option seems to fluctuate since it relies on a single snapshot rather than an average.
 
 **Option 2**
-- Calculate for the daily net change
-- Use SUM()OVER() to retrieve the running total per customer ordered by date so each row is the customer's balance after that day's transaction
-- Use RANGE BETWEEN INTERVAL '30 days' PRECEDING AND CURRENT ROW to collect a customer's balance from the last 30 days and AVG()
-- Use ROW_NUMBER() to assign each customer's row within a month and rn = 1 to get their last transaction 
+- Calculate for customer's daily net change
+- Use AVG() with RANGE BETWEEN INTERVAL '30 days' PRECEDING AND CURRENT ROW to average a customer's balance from the last 30 days as this is what data allocation is being based off
+- Use ROW_NUMBER() to assign each customer's row within a month and rn = 1 to get their last transaction
 
 ```SQL
 WITH cte AS(
@@ -437,8 +441,9 @@ ORDER BY month;
 
 
 **Option 3**
-- Use SUM()OVER to find the current closing balance
-- Because data can't be negative, use SUM(CASE) to turn any value less than 0 into 0 
+- Calculate each customer's monthly net change
+- Use SUM()OVER to find the running total per customers ordered by month
+- GROUP BY month to get the total data allocated with no LAG() or AVG() since data is allocated based on current balance
 
 ```SQL
 WITH cte AS(
@@ -480,19 +485,17 @@ The Data Bank team wants you to use the outputs generated from the above section
 View the [PowerPoint presentation](https://1drv.ms/p/c/5173473c9b608ebd/IQAXX-jgqmG2QYO4XGUhNeQGAZc26y_HIOM6KUsbJu1Xzcg?e=eNEhfs)
   
 ## Challenges
+- Q4 and Q5 from Customer Transaction, required manipulating DATE_TRUNC() to retrieve specific dates. Such as converting dates into month-ends, building a month-end calendar and joined it to the monthly net changes. And calculating for the customer percentage.
+- All three options from the Data Allocation Challenge proved to be difficult. Option 1: LAG() for last month’s balance, with NULLs handled for January. Option 2: The hardest. I approximated the 30-day average with a rolling window and used ROW_NUMBER() to count each customer once per month. Option 3: Simple, but negatives had to be set to 0 before summing.
 
 ## Key Takeaways
 **Business Insights**
-- Australia has the highest customer count of 110 in comparison to Europe who only has 88 customers.
-- Each region has 5 distinct nodes that customers are frequently and randomly allocated to.
-- Customers are allocated to a new node on an average of 15 days. While all 5 regions share the same median (15 days) and 95th percentile (28 days), Africa and Europe share the same 80th percentile of 24 days while the remaining regions share 23 days. This suggests that Africa and Europe are only a day behind when it comes to allocating customers to a new node, however it still shows that nodes are frequently yet consistently allocated.
-- March has the highest data allocation all three options while April is the lowest in all three. This suggests that April's data may be incomplete and will need further investigation.
-- Baseline of 240k data per month is required for our customers.
-- Option 3 shows the highest and smoothest monthly totals, but because it updates in real time, data allocation changes constantly which may pose difficulties to forecast and can get expensive.
-- Option 2 allocates less and lags in real changes, but it's more predicatable and affordable since it relies on the previous 30 days. There options two seems the best option for data allocation and to incite new customers to join, should add a small welcome allocation for new customer's first 30 days which not only incites new customers but also helps prevent null for option 2.
+- Each region has 5 distinct nodes that customers are frequently and randomly allocated to. Customers are allocated to a new node on an average of 15 days. While all 5 regions share the same median (15 days) and 95th percentile (28 days), Africa and Europe share the same 80th percentile of 24 days while the remaining regions share 23 days. This suggests that Africa and Europe are only a day behind when it comes to allocating customers to a new node, however it still shows that nodes are frequently yet consistently allocated.
+- March has the highest data allocation (~232k to 240k) in all three options while April is the lowest in all three (~152K to 157K). This suggests A baseline of 240k data per month is required for our customers and that April's data may be incomplete and will need further investigation.
+- Option 3 shows the highest and smoothest monthly totals, but because it updates in real time, data allocation changes constantly which may pose difficulties to forecast and can get expensive. Option 2 allocates less and lags in real changes, but it's more predictable and affordable since it relies on the previous 30 days. Overall, Option 2 seems the best option for data allocation as it's more predictable for data demand and affordable. To incite new customers to join, it's suggested to add a small welcome allocation for new customer's first 30 days which not only incites new customers but also helps prevent null for any new customer's who don't have any previous 30 days which can skrew data.
 
 **Key Insights**
-- PERCENTILE_COUNT()
-- DATE_TRUNC()
-- LEFT JOIN
-- RANGE BETWEEN INTERVAL '30 days' PRECEDING AND CURRENT ROW
+- Learn PERCENTILE_CONT() to calculate specific percentile value from a sorted set of numbers
+- Improve DATE_TRUNC() manipulation to round a date to a set interval such as the start of a month, for grouping and month-end dates
+- LEFT JOIN with COALESCE() to keep rows with no match and turns NULL into 0 
+- Learn RANGE BETWEEN INTERVAL '30 days' PRECEDING AND CURRENT ROW defines a window by date rather than row count
