@@ -26,7 +26,7 @@ There are 3 key datasets in this case study:
 </p>
 
 ## Question and Solution
-
+View the [full code](data_bank.sql)
 ### A. Customer Nodes Exploration
 **1. How many unique nodes are there on the Data Bank system?**
 - Use COUNT() with DISTINCT to find the number of unique nodes
