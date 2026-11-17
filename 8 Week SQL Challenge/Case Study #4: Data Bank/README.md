@@ -161,29 +161,31 @@ ORDER BY txn_type;
 - Deposit has the highest count (2671) and total amount ($1,259,168). In comparison to withdrawal, who has the lowest count (1580) and total amount ($793,003). This suggests depositing money into the Data Bank system, is a popular feature for customers.
 
 **2. What is the average total historical deposit counts and amounts for all customers?**
-- Similar logic to Q1, but filter results so it returns the count and amount customers deposit into Data Bank
-- AVG() the total count and amount
+- Similar logic to Q1, but filter results so it returns the count, total amount and the average amount per deposit
+- AVG() the total count, total amount, and average deposit
 
 ```SQL
 WITH deposit_cte AS(
     SELECT 
         customer_id,
         COUNT(txn_type) AS depo_count,
-        SUM(txn_amount) AS depo_sum
+        SUM(txn_amount) AS depo_sum,
+        AVG(txn_amount) AS depo_avg
     FROM customer_transactions
     WHERE txn_type = 'deposit'
     GROUP BY customer_id
 )
 SELECT
     ROUND(AVG(depo_count),2) AS deposit_count,
+    ROUND(AVG(depo_avg),2) AS deposit_average,
     ROUND(AVG(depo_sum),2) AS deposit_amount
 FROM deposit_cte;
 ```
 
 **Result**:
 
-<img width="359" height="66" alt="2" src="https://github.com/user-attachments/assets/34d0943b-ded2-44ea-96d3-7f5dbb44edb5" /><br>
-- Customers have deposited money into their account about 5 times with the average total overall being $2,718.24.
+<img width="529" height="70" alt="2" src="https://github.com/user-attachments/assets/f7e9fab1-7025-4da3-a247-f2dfa8c0538d" /><br>
+- Customers have deposited money into their account about 5 times totaling roughly $2,718.24 with an average of $508.61 per deposit.
 
 **3. For each month - how many Data Bank customers make more than 1 deposit and either 1 purchase or 1 withdrawal in a single month?**
 - Create a CTE to act as a tracker and count the times a customer either deposit, purchase or withdrawals money
@@ -214,7 +216,7 @@ ORDER BY month;
 **Result**:
 
 <img width="270" height="143" alt="3" src="https://github.com/user-attachments/assets/6048bacc-6f7b-4534-bea8-4da4ca463cfb" /><br>
-- January has the highest count for customers who deposited more than 1 time and has exactly once purchased or withdrawal money from their account.
+- January has the highest count for customers who deposited more than 1 time and has only once purchased or withdrawal money from their account.
 - This shows that customers where highly conservative using their money in the beginning of the year or the first time they open a Data Bank account. April has a concerningly low amount of customers who meet this requirement, it's possible that the data is incomplete for this month and should be investigated further.
 
 **4. What is the closing balance for each customer at the end of the month?**
@@ -387,7 +389,8 @@ ORDER BY month;
 - Data allocation for this option seems to fluctuate since it relies on a single snapshot rather than an average.
 
 **Option 2**
-- Calculate for customer's daily net change
+- Apply the same logic as Option 1 with some minor changes
+- Calculate a customer's daily net change
 - Use AVG() with RANGE BETWEEN INTERVAL '30 days' PRECEDING AND CURRENT ROW to average a customer's balance from the last 30 days as this is what data allocation is being based off
 - Use ROW_NUMBER() to assign each customer's row within a month and rn = 1 to get their last transaction
 
@@ -441,7 +444,8 @@ ORDER BY month;
 
 
 **Option 3**
-- Calculate each customer's monthly net change
+- Apply the same logic as Option 1 & 2 with some minor changes
+- Calculate a customer's monthly net change
 - Use SUM()OVER to find the running total per customers ordered by month
 - GROUP BY month to get the total data allocated with no LAG() or AVG() since data is allocated based on current balance
 
@@ -472,7 +476,7 @@ ORDER BY month;
 **Result**:
 
 <img width="328" height="142" alt="3" src="https://github.com/user-attachments/assets/18b759d2-e0f0-4e8e-b1dd-06e3c886063d" /><br>
-- March has the highest data allocated of 240,065 while April has the lowest of 157,033
+- March has the highest data allocated of 240,065 while April has the lowest of 157,033.
 - Data allocation for this option is the most stable and has the highest values. However, because this is updated in real time it can make it difficult to predict for future data storage.
 
 ### E. Extension Request
@@ -485,17 +489,17 @@ The Data Bank team wants you to use the outputs generated from the above section
 View the [PowerPoint presentation](https://1drv.ms/p/c/5173473c9b608ebd/IQAXX-jgqmG2QYO4XGUhNeQGAZc26y_HIOM6KUsbJu1Xzcg?e=eNEhfs)
   
 ## Challenges
-- Q4 and Q5 from Customer Transaction, required manipulating DATE_TRUNC() to retrieve specific dates. Such as converting dates into month-ends, building a month-end calendar and joined it to the monthly net changes. And calculating for the customer percentage.
+- Q4 and Q5 from Customer Transaction, required manipulating DATE_TRUNC() to retrieve specific dates. Such as converting dates into month-ends, building a month-end calendar and joined it to the monthly net changes. 
 - All three options from the Data Allocation Challenge proved to be difficult. Option 1: LAG() for last month’s balance, with NULLs handled for January. Option 2: The hardest. I approximated the 30-day average with a rolling window and used ROW_NUMBER() to count each customer once per month. Option 3: Simple, but negatives had to be set to 0 before summing.
 
 ## Key Takeaways
 **Business Insights**
 - Each region has 5 distinct nodes that customers are frequently and randomly allocated to. Customers are allocated to a new node on an average of 15 days. While all 5 regions share the same median (15 days) and 95th percentile (28 days), Africa and Europe share the same 80th percentile of 24 days while the remaining regions share 23 days. This suggests that Africa and Europe are only a day behind when it comes to allocating customers to a new node, however it still shows that nodes are frequently yet consistently allocated.
 - March has the highest data allocation (~232k to 240k) in all three options while April is the lowest in all three (~152K to 157K). This suggests A baseline of 240k data per month is required for our customers and that April's data may be incomplete and will need further investigation.
-- Option 3 shows the highest and smoothest monthly totals, but because it updates in real time, data allocation changes constantly which may pose difficulties to forecast and can get expensive. Option 2 allocates less and lags in real changes, but it's more predictable and affordable since it relies on the previous 30 days. Overall, Option 2 seems the best option for data allocation as it's more predictable for data demand and affordable. To incite new customers to join, it's suggested to add a small welcome allocation for new customer's first 30 days which not only incites new customers but also helps prevent null for any new customer's who don't have any previous 30 days which can skrew data.
+- Option 3 shows the highest and smoothest monthly totals, but because it updates in real time, data allocation changes constantly which may pose difficulties to forecast and can get expensive. Option 2 allocates less and lags in real changes, but it's more predictable and affordable since it relies on the previous 30 days. Overall, Option 2 is the best choice for data allocation because it's more predictable and keeps costs lower. To attract new customers, I recommend a small welcome allocation for their first 30 days. This encourages sign-ups and avoids missing values for new customers who have no previous 30 days of balance history, which would skew the results.
 
 **Key Insights**
 - Learn PERCENTILE_CONT() to calculate specific percentile value from a sorted set of numbers
-- Improve DATE_TRUNC() manipulation to round a date to a set interval such as the start of a month, for grouping and month-end dates
+- Improve DATE_TRUNC() manipulation to round a date to a set interval such as the start of a month for grouping and month-end dates
 - LEFT JOIN with COALESCE() to keep rows with no match and turns NULL into 0 
 - Learn RANGE BETWEEN INTERVAL '30 days' PRECEDING AND CURRENT ROW defines a window by date rather than row count
