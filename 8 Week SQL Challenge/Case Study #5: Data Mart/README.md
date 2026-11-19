@@ -9,8 +9,8 @@
 - [Objective](#objective)
 - [Entity Relationship Diagram](#entity-relationship-diagram)
 - [Question & Solution](#question-and-solution)
-- [Challenges](#challenges)
 - [Key Takeaways](#key-takeaways)
+- [Challenges](#challenges)
 
 ## Objective
 Data Mart is Danny's latest venture, an international online supermarket specialized in fresh produce. In June 2020, large scale supply changes were implemented at Data Mart as products now used a sustainable packaging method. Danny wants to know how these changes impacted sales performance and answer key business questions, such as:
@@ -33,7 +33,10 @@ View the [full code](./data_mart.sql)
 - [1. Data Cleansing Steps](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%235%3A%20Data%20Mart/Solutions/1.%20Data%20Cleansing%20Steps.md)
 - [2. Data Exploration](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%235%3A%20Data%20Mart/Solutions/2.%20Data%20Exploration.md)
 - [3. Before & After Analysis](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%235:%20Data%20Mart/Solutions/3.%20Before%20&%20After%20Analysis.md)
+- [4. Bonus Question]()
+
+## Key Takeaways
 
 ## Challenges
 
-## Key Takeaways
+
