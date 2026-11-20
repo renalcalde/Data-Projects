@@ -52,10 +52,10 @@ To understand the impacts of these changes, we can look at the transactions and 
 
 **2. Which platform, region, segment and customer types were the most impacted by this change?**
 
-  - Platform: Both Retail and Shopify were heavily influenced by these changes. Retail is in the lead to Shopify when it comes to total sales but experienced a decline of -0.59% in growth rate. This compares with Shopify whose growth rate increased to 9.35%. This suggests after the implementation of the new sustainable packaging method, online orders have increased, demonstrating the support of our changes.
-  - Region: Europe has a growth rate of 4.96% while Asia has a -1.33% growth rate.
-  - Segment: Unknown in both demographics and age band have a -0.55% growth rate.
-  - Customer types: Existing (-0.51%) and guest (-0.46%) faced a decline in their growth rate but new customers faced an increase (0.69%). The new changes appear to be popular and gain new customers to Data Mart, but existing customers don't appear to be pleased with the new changes. It's possible that loyal customers aren't happy with this new change because they either preferred our previous packaging methods which is why they keep on returning or the new method doesn't hold up to standards and we're unaware of the issues. An investigation is further needed to understand the decline behind existing customers.
+  - **Platform**: Both Retail and Shopify were heavily influenced by these changes. Retail is in the lead to Shopify when it comes to total sales but experienced a decline of -0.59% in growth rate. This compares with Shopify whose growth rate increased to 9.35%. This suggests after the implementation of the new sustainable packaging method, online orders have increased, demonstrating the support of our changes.
+  - **Region**: Europe has a growth rate of 4.96% while Asia has a -1.33% growth rate.
+  - **Segment**: Unknown in both demographics and age band have a -0.55% growth rate.
+  - **Customer types**: Existing (-0.51%) and guest (-0.46%) faced a decline in their growth rate but new customers faced an increase (0.69%). The new changes appear to be popular and gain new customers to Data Mart, but existing customers don't appear to be pleased with the new changes. It's possible that loyal customers aren't happy with this new change because they either preferred our previous packaging methods which is why they keep on returning or the new method doesn't hold up to standards and we're unaware of the issues. An investigation is further needed to understand the decline behind existing customers.
   
 **3. What can we do about future introduction of similar sustainability updates to the business to minimise impact on sales?**
 
