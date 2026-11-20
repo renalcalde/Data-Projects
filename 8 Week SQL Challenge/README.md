@@ -12,7 +12,7 @@ Mainly being a self-taught analysts, I'm working through all 8 case studies to s
 | 2 | [Pizza Runner](https://github.com/renalcalde/Data-Projects/tree/main/8%20Week%20SQL%20Challenge/Case%20Study%20%232%3A%20Pizza%20Runner) | ✅ Complete |
 | 3 | [Foodie-Fi](https://github.com/renalcalde/Data-Projects/tree/main/8%20Week%20SQL%20Challenge/Case%20Study%20%233%3A%20Foodie-Fi) | ✅ Complete |
 | 4 | [Data Bank](https://github.com/renalcalde/Data-Projects/tree/main/8%20Week%20SQL%20Challenge/Case%20Study%20%234%3A%20Data%20Bank) | ✅ Complete |
-| 5 | Data Mart | In Progress 🚧 | 
-| 6 | Clique Bait | Coming soon |
+| 5 | [Data Mart](https://github.com/renalcalde/Data-Projects/tree/main/8%20Week%20SQL%20Challenge/Case%20Study%20%235%3A%20Data%20Mart) | ✅ Complete | 
+| 6 | Clique Bait | In Progress 🚧 |
 | 7 | Balanced Tree Clothing Co. | Coming soon |
 | 8 | Fresh Segments | Coming soon |
