@@ -38,7 +38,7 @@ This is a lengthy case study, thus, it is divided into four sections:
 
 [4. Bonus Question](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%235%3A%20Data%20Mart/Solutions/4.%20Bonus%20Question.md)
 
-View the [full code](./data_mart.sql)
+View the [full code](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%235%3A%20Data%20Mart/Solutions/data_mart.sql)
 
 ## Key Takeaways
 
