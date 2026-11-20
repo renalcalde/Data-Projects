@@ -28,6 +28,8 @@ There is only one dataset for this case study:
 
 ## Question and Solution
 
+This is a lengthy case study, thus, it is divided into four sections:
+
 [1. Data Cleansing Steps](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%235%3A%20Data%20Mart/Solutions/1.%20Data%20Cleansing%20Steps.md)
 
 [2. Data Exploration](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%235%3A%20Data%20Mart/Solutions/2.%20Data%20Exploration.md)
