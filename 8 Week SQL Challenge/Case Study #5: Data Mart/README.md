@@ -42,7 +42,7 @@ View the [full code](./data_mart.sql)
 
 ## Key Takeaways
 
-**Business Insights**
+### Business Insights
 
 After cleaning, exploring and analyzing the data, we can now return back to answering Danny's main questions:
 
@@ -65,13 +65,14 @@ To minimize sales for future updates we can do the following:
 - Protecting price margin, maybe even offering a discount to roll out remaining supplies
 - Market the new change as convenient and durable to build trust with customers before officially launching
 
-**Technical Skills**
+### Technical Skills
+
 - Using the GROUPING() function to call upon multiple columns and condense into a single column
 - Using TO_CHAR with INTERVAL to look at a certain time period from from a baseline date
 - Using LEFT() or SUBSTRING() to find a character in a string at a specific position
-- Expanding and practicing my knowledge of the JOIN clause, using it various scenarios such as LEFT JOIN, FULL JOIN and etc
+- Expanding and practicing my knowledge of the JOIN clause, using it in various scenarios such as LEFT JOIN, FULL JOIN and etc
 
 ## Challenges
-- In Part 1 the Data Cleansing Step, finding a way to split the segment column to look at a specific character took a bit of time. I didn't want to split the `segment` column first then look at each row to identify what demographic or age band was the combination, so after much research came across using CASE LEFT() and CASE SUBSTRING() to create the additional columns with customer information.
-- Q2 from Part 2 Data Exploration took some time as I had to figure out a way to generate the missing week numbers in `clean_weekly_sales`. That's when I found GENERATE_SERIES() to create the sequence of numbers without needing a physical table
-- For Part 4 Bonus Question, I struggled to group the following columns without the values being disproportionate. That's when I found the solution to my problem by using the GROUPING() function to combine all my columns into a single one that also displays their subcategory using COALESCE().  
+- In Part 1 (Data Cleansing Steps), finding a way to split the `segment` column to look at a specific character took a bit of time. I didn't want to split the `segment` column first then look at each row to identify what demographic or age band was the combination, so after much research, I came across using CASE LEFT() and CASE SUBSTRING() to create the additional columns with customer information.
+- Q2 from Part 2 (Data Exploration) took some time as I had to figure out a way to generate the missing week numbers in `clean_weekly_sales`. That's when I found GENERATE_SERIES() to create the sequence of numbers without needing a physical table.
+- For Part 4 (Bonus Question), I struggled to group the following columns without the percentage values being disproportionate. That's when I found the solution to my problem by using the GROUPING() function to combine all my columns into a single column without impacting values.  
