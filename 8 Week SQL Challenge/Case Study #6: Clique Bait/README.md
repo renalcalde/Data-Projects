@@ -23,13 +23,13 @@ There are 5 available datasets in this case study:
 - `campaign_identifier` : shows information about the 3 campaigns that Clique Bait has ran on their website so far in 2020
 - `page_hierarchy` : Lists all the pages on the Clique Bait website
 
-No entity relationship diagram was provided, so I create one using dbdiagram.io. View the [schema and dbdiagram code](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%236%3A%20Clique%20Bait/solutions/1.%20Enterprise%20Relationship%20Diagram.md).
-
 <p align="center">
 <img src="png/entity_relationship_diagram.png" alt="Entity Relationship Diagram" width="800">
 </p>
 
 ## Question and Solution
+
+[1. Enterprise Relationship Diagram](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%236%3A%20Clique%20Bait/solutions/1.%20Enterprise%20Relationship%20Diagram.md)
 
 ## Key Takeaways
 ## Challenges
