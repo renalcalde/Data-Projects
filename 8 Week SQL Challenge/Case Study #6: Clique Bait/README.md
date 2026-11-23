@@ -40,6 +40,14 @@ There are 5 available datasets in this case study:
 ## Key Takeaways
 
 **Business Insights**
+- 49.86% of visits ended in a purchase. The three most purchased products were Lobster (754), Oyster (726) and Crab (719).
+- Oyster was the most viewed product (1,568), but Lobster had the most cart adds (968), the most purchases (754) and the best view-to-purchase rate (48.75%). Russian Caviar had the lowest rate (44.59%) and the most abandoned carts (249).
+- On average, 60.95% of product views led to a cart add and 75.93% of cart adds led to a purchase, so more people drop off between viewing and adding to cart than between adding to cart and buying.
+- The overall click-through rate across the three campaigns was 80.19%.
+- Among visits that saw an ad, those who clicked purchased 89.65% of the time, compared with 66.22% for those who didn't click. That is an uplift of +23.43 percentage points.
+- Visits with no impression purchased 37.92% of the time. Against that baseline, visits with an impression but no click were up +28.30 percentage points, and visits with an impression and a click were up +51.73 points. Clicking is strongly associated with purchasing. People who click were probably more interested to begin with, so this doesn't prove the ads caused the purchases.
+- The Shellfish campaign had the most visits (2,388) but a click-through rate of 80.10%, close to the overall average. The Fish campaign had the fewest visits (260) and the highest click-through rate (84.62%). This hints that the Fish ad was more engaging, but with only 260 visits the gap could partly be chance. Possible explanations are a shorter run, a stronger deal (BOGOF) or higher demand for fish.
+- Fish (90.91%) and Shellfish (89.85%) had higher purchase rates than Luxury (87.65%). The gap is only about 2 to 3 points, so it's worth investigating, for example whether the price is a barrier, but it's too small to draw a firm conclusion.
 
 **Key Insights**
 
