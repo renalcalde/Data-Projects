@@ -29,13 +29,15 @@ There are 5 available datasets in this case study:
 
 ## Question and Solution
 
-[1. Enterprise Relationship Diagram](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%236%3A%20Clique%20Bait/solutions/1.%20Enterprise%20Relationship%20Diagram.md)
+[1. Enterprise Relationship Diagram](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%236%3A%20Clique%20Bait/solutions/1.%20Enterprise%20Relationship%20Diagram.md): learn how I created the entity relationship program on dbdiagram.io
 
-[2. Digital Analysis](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%236%3A%20Clique%20Bait/solutions/2.%20Digital%20Analysis.md)
+[2. Digital Analysis](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%236%3A%20Clique%20Bait/solutions/2.%20Digital%20Analysis.md): explore the dataset
 
-[3. Product Funnel Analysis](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%236%3A%20Clique%20Bait/solutions/3.%20Product%20Funnel%20Analysis.md)
+[3. Product Funnel Analysis](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%236%3A%20Clique%20Bait/solutions/3.%20Product%20Funnel%20Analysis.md): analyzes products and how user's navigate on Clique Bait
 
-[4. Campaigns Analysis](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%236:%20Clique%20Bait/solutions/4.%20Campaigns%20Analysis.md)
+[4. Campaigns Analysis](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%236:%20Clique%20Bait/solutions/4.%20Campaigns%20Analysis.md): analyze how campaigns have influence product purchases
+
+View the [full code](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%236%3A%20Clique%20Bait/solutions/clique_bait.sql)
 
 ## Key Takeaways
 
