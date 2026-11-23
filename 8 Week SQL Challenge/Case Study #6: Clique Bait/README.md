@@ -33,5 +33,7 @@ There are 5 available datasets in this case study:
 
 [2. Digital Analysis](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%236%3A%20Clique%20Bait/solutions/2.%20Digital%20Analysis.md)
 
+[3. Product Funnel Analysis](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%236%3A%20Clique%20Bait/solutions/3.%20Product%20Funnel%20Analysis.md)
+
 ## Key Takeaways
 ## Challenges
