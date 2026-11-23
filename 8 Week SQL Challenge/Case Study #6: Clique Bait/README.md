@@ -21,7 +21,7 @@ There are 5 available datasets in this case study:
 - `events` : customer visits are then logged
 - `event_identifier` : shows the type of events that are captured in Clique Bait's digital data systems
 - `campaign_identifier` : shows information about the 3 campaigns that Clique Bait has ran on their website so far in 2020
-- `page_hierarchy` : Lists all the pages on the Clique Bait website
+- `page_hierarchy` : lists all the pages on the Clique Bait website
 
 <p align="center">
 <img src="png/entity_relationship_diagram.png" alt="Entity Relationship Diagram" width="800">
