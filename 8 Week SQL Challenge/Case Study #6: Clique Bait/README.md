@@ -50,5 +50,10 @@ There are 5 available datasets in this case study:
 - Fish (90.91%) and Shellfish (89.85%) had higher purchase rates than Luxury (87.65%). The gap is only about 2 to 3 points, so it's worth investigating, for example whether the price is a barrier, but it's too small to draw a firm conclusion.
 
 **Key Insights**
+- Creating a binary flag using a combination of MAX() + CASE to return NULL if a condition doesn't meet in a row or 1 if it does.
+- Learning about marketing funnel along with relevant equations such as conversion rates (# of conversion / total audience) and the difference between an uplift value and percentage.
+  - Uplift value (absolute) = New value - Baseline value; measures the raw difference between the two groups and often represented as 'pp'
+  - Uplift percentage (relative) = (New value - Baseline value / Baseline value) * 100; measures the difference as percentage and represented as '%'
 
 ## Challenges
+- The hardest part of this case study was getting the conversion rate and uplift calculations right. In my early queries, I didn't filter my groups properly, used the wrong group for some calculations, and reported inaccurate numbers because I didn't understand the difference between absolute uplift (percentage points) and relative uplift (percent). After a lot of trial and error, learning the underlying formulas and repeatedly re-checking my results, I produced numbers that are consistent with the data. This case study taught me to confirm what each number represents before I report it.
