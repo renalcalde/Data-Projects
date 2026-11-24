@@ -35,7 +35,7 @@ There are 5 available datasets in this case study:
 
 [3. Product Funnel Analysis](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%236%3A%20Clique%20Bait/solutions/3.%20Product%20Funnel%20Analysis.md): analyzes products and how user's navigate on Clique Bait
 
-[4. Campaigns Analysis](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%236:%20Clique%20Bait/solutions/4.%20Campaigns%20Analysis.md): analyze how campaigns have influence product purchases
+[4. Campaigns Analysis](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%236:%20Clique%20Bait/solutions/4.%20Campaigns%20Analysis.md): analyze how campaigns have influence product purchases and view my [campaign performance infographic](./png/clique_bait_infographic.pdf)
 
 View the [full code](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%236%3A%20Clique%20Bait/solutions/clique_bait.sql)
 
