@@ -24,6 +24,10 @@ The following two tables will be used for the bonus question:
 - `product_hierarcy` 
 - `product_price`
 
+<p align="center">
+<img src="png/entity_relationship_diagram.png" alt="Entity Relationship Diagram" width="800">
+</p>
+
 ## Question and Solution
 
 ## Key Takeaways
