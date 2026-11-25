@@ -1,4 +1,4 @@
-# 🪝 Case Study #7: Balanced Tree Clothing Co.
+# 🌲 Case Study #7: Balanced Tree Clothing Co.
 
 <p align="center">
   <img src="png/balance_tree_poster.png" alt="Balanced Tree Clothing Co. Poster" width="500"><br>
