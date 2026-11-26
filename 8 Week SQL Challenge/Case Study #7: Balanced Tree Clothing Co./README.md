@@ -30,6 +30,8 @@ The following two tables will be used for the bonus question:
 
 ## Question and Solution
 
+View the [full code]()
+
 ### A. High Level Sales Analysis
 
 <details>
@@ -550,6 +552,130 @@ LIMIT 1;
 </details>
 
 ### D. Reporting Challenge
+<details>
+	<summary>View Solution</summary><br>
+
+Write a single SQL script that combines all of the previous questions into a scheduled report that the Balanced Tree team can run at the beginning of each month to calculate the previous month’s values.
+
+Imagine that the Chief Financial Officer (which is also Danny) has asked for all of these questions at the end of every month.
+
+He first wants you to generate the data for January only - but then he also wants you to demonstrate that you can easily run the samne analysis for February without many changes (if at all).
+
+Feel free to split up your final outputs into as many tables as you need - but be sure to explicitly reference which table outputs relate to which question for full marks :)
+
+---
+
+1. Create a VIEW called `full_sales` that JOINs `sales` and `product_details` along with a DROP...CASCADE to delete the view and automatically remove objects that depend on it
+2. Use DATE_TRUNC() to round the timestamp to a single month
+
+```
+DROP VIEW IF EXISTS full_sales CASCADE;
+
+CREATE OR REPLACE VIEW full_sales AS
+SELECT
+    s.prod_id,
+    s.qty,
+    s.price,
+    s.discount,
+    s.member,
+    s.txn_id,
+    s.start_txn_time,
+    DATE_TRUNC('month', s.start_txn_time)::DATE AS txn_month,
+    d.product_id,
+    d.product_name,
+    d.category_id,
+    d.segment_id,
+    d.style_id,
+    d.category_name,
+    d.segment_name,
+    d.style_name
+FROM sales s 
+INNER JOIN product_details d
+    ON s.prod_id = d.product_id;
+```
+
+2. Create a TEMP TABLE called `report_month` that acts as filter for a specific month (users will need to change this according to their demand)
+
+```SQL
+DROP TABLE IF EXISTS report_month CASCADE;
+DROP VIEW IF EXISTS full_sales CASCADE;
+
+CREATE OR REPLACE VIEW full_sales AS
+SELECT
+    s.prod_id,
+    s.qty,
+    s.price,
+    s.discount,
+    s.member,
+    s.txn_id,
+    s.start_txn_time,
+    DATE_TRUNC('month', s.start_txn_time)::DATE AS txn_month,
+    d.product_id,
+    d.product_name,
+    d.category_id,
+    d.segment_id,
+    d.style_id,
+    d.category_name,
+    d.segment_name,
+    d.style_name
+FROM sales s 
+INNER JOIN product_details d
+    ON s.prod_id = d.product_id;
+
+CREATE TEMP TABLE report_month AS
+SELECT DATE '2021-01-01' AS month; -->> CHANGE THE MONTH HERE <<--
+```
+
+3. Create another TEMP VIEW called `monthly_report_sales` that uses `full_sales` and filters results based on `report_month`
+
+```SQL
+-- resets views and tables whenever month changes
+DROP VIEW IF EXISTS monthly_report_sales CASCADE;
+DROP TABLE IF EXISTS report_month CASCADE;
+DROP VIEW IF EXISTS full_sales CASCADE;
+
+CREATE OR REPLACE VIEW full_sales AS
+SELECT
+    s.prod_id,
+    s.qty,
+    s.price,
+    s.discount,
+    s.member,
+    s.txn_id,
+    s.start_txn_time,
+    DATE_TRUNC('month', s.start_txn_time)::DATE AS txn_month,
+    d.product_id,
+    d.product_name,
+    d.category_id,
+    d.segment_id,
+    d.style_id,
+    d.category_name,
+    d.segment_name,
+    d.style_name
+FROM sales s 
+INNER JOIN product_details d
+    ON s.prod_id = d.product_id;
+
+CREATE TEMP TABLE report_month AS
+SELECT DATE '2021-01-01' AS month; -->> CHANGE THE MONTH HERE <<--
+
+CREATE TEMP VIEW monthly_report_sales AS 
+SELECT * 
+FROM full_sales fs
+INNER JOIN report_month rm
+    ON fs.txn_month = rm.month;
+```
+
+4. Copy and paste all solutions from the previous questions, changing any JOIN clause to `monthly_report_sales`
+
+View the [full code]()
+
+**Result**:
+
+<img width="1846" height="940" alt="image" src="https://github.com/user-attachments/assets/46f80a86-ac07-44e4-a25d-98facb2ecda6" /><br>
+*Not the full output*
+</details>
+
 
 ### E. Bonus Challenge
 <details>
@@ -571,7 +697,7 @@ WITH category_cte AS(
 )
 ```
 
-2. Use this same logic to create the following CTEs for segment and style
+2. Use this same logic to create the following CTEs: segment and style
 3. Use the `parent_id` to link the child IDs 
 
 ```SQL
@@ -703,7 +829,6 @@ INNER JOIN combine_cte cc
 <img width="675" height="166" alt="1" src="https://github.com/user-attachments/assets/c266ba3f-cb84-4f5b-b4fa-f5a7b3719b8c" />
 	
 </details>
-
 
 ## Key Takeaways
 
