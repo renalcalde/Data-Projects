@@ -594,7 +594,7 @@ INNER JOIN product_details d
     ON s.prod_id = d.product_id;
 ```
 
-2. Create a TEMP TABLE called `report_month` that acts as filter for a specific month (users will need to change this according to their demand)
+2. Create a TEMP TABLE called `report_month` that acts as filter for a specific month (Danny will need to change this according to what month he wants to view such as January -> '2020-01-01', February -> '2020-02-01', March -> '2020-03-01' and etc.)
 
 ```SQL
 DROP TABLE IF EXISTS report_month CASCADE;
