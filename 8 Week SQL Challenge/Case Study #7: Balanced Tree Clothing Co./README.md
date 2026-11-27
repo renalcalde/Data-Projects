@@ -832,19 +832,21 @@ INNER JOIN combine_cte cc
 
 ## Key Takeaways
 
-**Buisness Insight**
+**Buisness Insights**
 
-- The median transaction is $509.50 for gross revenue with the middle half of transactions falling between $375.75 and $657.00.
-- Members make up 60.03% of transactions, but their average gross revenue ($516.27) is almost the same as non-members ($515.04), so membership doesn't change spending per transaction.
-- The top 3 products by gross revenue is Men's Blue Polo Shirt ($217,683.00), Women's Grey Fashion Jacket ($209,304.00), and Men's White Tee Shirt ($152,000.00)
-- Shirts earn the most gross revenue of ($406,143.00) even though Jackets sold more units (11,385) and Jackets earned less ($366,983.00). Women's Grey Fashion Jacket sold the highest quantities of 3876 across all segments.
-- Womens sold slightly more units (22,734 vs 22,482), but Mens brought in more gross revenue ($714,120 vs $575,333), a 55.38% to 44.62% split. Within each category, the top seller by quantity is the Grey Fashion Jacket (Womens, 3,876) and the Blue Polo Shirt (Mens, 3,819).
-- The top product in Jeans, Jackets and Shirts brings in over half of its segment's revenue, while Socks are the most evenly spread. Jackets account for 63.79% of Womens revenue, and the weakest product is the Men's Teal Button Up Shirt (8.98% of shirt revenue).
-- Women's Navy Oversized Jeans appear in 50.96% of transactions, the highest, compared to Women's Cream Relaxed Jeans and Men's White Striped Socks at 49.72%.
-- Men's White Tee Shirt, Women's Grey Fashion Jacket and Men's Teal Button Up Shirt, bought together in 352 transactions.
+- The median transaction is $509.50 in gross revenue with the middle half of transactions falling between $375.75 and $647.00.
+- Members make up 60.03% of transactions, but their average gross revenue ($516) is almost the same as non-members ($515), so membership doesn't increase spendings.
+- The top 3 products by gross revenue are Men's Blue Polo Shirt ($217,683), Women's Grey Fashion Jacket ($209,304), and Men's White Tee Shirt ($152,000). These products should be consistently stocked and promoted.
+- Shirts earn the most gross revenue ($406,143), while Jackets sell slightly more units (11,385) but earn less ($366,983). Shirts bring in more revenue per unit (about $36 vs $32), so units sold alone don't show which segment earns more.
+- Women's sold slightly more units (22,734 vs 22,482), but Mens brought in more gross revenue ($714,120 vs $575,333), a 55.38% to 44.62% split. Mens items earn more per unit sold (about $32 vs $25).
+- Men's White Tee Shirt, Women's Grey Fashion Jacket and Men's Teal Button Up Shirt are often bought together in 352 transactions.
+- The top product in Jeans, Jackets and Shirts brings in over half of its segment's revenue, while Socks are the most evenly spread. Jackets account for 63.79% of Women's revenue, and the weakest product is the Men's Teal Button Up Shirt (8.98% of shirt revenue). A promotion is worth testing to increase Men's Teal Button Up Shirt sales before cutting its stock, since it's part of the most common 3 product combination.  
 
-**Key Takeaways**
+**Key Insights**
 
-- Learn about VIEW to create a table and DROP...CASCADE 
+- Learn how to use a VIEW along with DROP...CASCADE so I can rerun the script without errors.
+- Learned about the combination formula and how to apply it in SQL using JOIN with '<' to find all possible combinations.
 
 ## Challenges
+
+- The Reporting Challenge was the hardest part because I had to find a way to rerun every query for any month without rewriting them. Learning how `VIEW` works was tricky at first, but once I understood it, I used a view to filter the sales data to one month, so the whole report updates by changing a single line. Along the way I also learned to use `DROP ... CASCADE` so the script can be rerun without errors.
