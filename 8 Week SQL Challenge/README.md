@@ -14,5 +14,5 @@ Mainly being a self-taught analysts, I'm working through all 8 case studies to s
 | 4 | [Data Bank](https://github.com/renalcalde/Data-Projects/tree/main/8%20Week%20SQL%20Challenge/Case%20Study%20%234%3A%20Data%20Bank) | ✅ Complete |
 | 5 | [Data Mart](https://github.com/renalcalde/Data-Projects/tree/main/8%20Week%20SQL%20Challenge/Case%20Study%20%235%3A%20Data%20Mart) | ✅ Complete | 
 | 6 | [Clique Bait](https://github.com/renalcalde/Data-Projects/tree/main/8%20Week%20SQL%20Challenge/Case%20Study%20%236%3A%20Clique%20Bait) | ✅ Complete |
-| 7 | Balanced Tree Clothing Co. | In Progress 🚧 |
-| 8 | Fresh Segments | Coming soon |
+| 7 | Balanced Tree Clothing Co. | ✅ Complete |
+| 8 | Fresh Segments | In Progress 🚧 |
