@@ -30,7 +30,7 @@ The following two tables will be used for the bonus question:
 
 ## Question and Solution
 
-View the [full code]()
+View the [full code](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%237%3A%20Balanced%20Tree%20Clothing%20Co./solutions/%20balanced_tree_clothing_co.sql)
 
 ### A. High Level Sales Analysis
 
@@ -668,7 +668,7 @@ INNER JOIN report_month rm
 
 4. Copy and paste all solutions from the previous questions, changing any JOIN clause to `monthly_report_sales`
 
-View the [full code]()
+   View the [full code](https://github.com/renalcalde/Data-Projects/blob/main/8%20Week%20SQL%20Challenge/Case%20Study%20%237%3A%20Balanced%20Tree%20Clothing%20Co./solutions/reporting_challenge.sql)
 
 **Result**:
 
@@ -829,6 +829,7 @@ INNER JOIN combine_cte cc
 <img width="675" height="166" alt="1" src="https://github.com/user-attachments/assets/c266ba3f-cb84-4f5b-b4fa-f5a7b3719b8c" />
 	
 </details>
+
 
 ## Key Takeaways
 
